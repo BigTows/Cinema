@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mariadb">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/ru/BigTows/libs/mariadb.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
