@@ -2,6 +2,9 @@ package ru.bigtows.forms.controllers;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
@@ -50,18 +53,18 @@ public class MenuController {
     }
 
 
-    public void toTable(HashMap<Integer,ArrayList<String>> items){
+    public void toTable(HashMap<Integer, ArrayList<String>> items) {
         table.getColumns().clear();
-        ArrayList<TableColumn> colums =new ArrayList<TableColumn>();
-        for (int i=0;i<items.get(0).size();i++)
+        ArrayList<TableColumn> colums = new ArrayList<TableColumn>();
+        for (int i = 0; i < items.get(0).size(); i++)
             table.getColumns().addAll(new TableColumn(items.get(0).get(i)));
-        for(int i=1;i<items.size()-1;i++){
-            for (int j=0;j<items.get(0).size();j++){
+        for (int i = 1; i < items.size() - 1; i++) {
+            for (int j = 0; j < items.get(0).size(); j++) {
                 //table.setItems();
             }
         }
-    }
 
+    }
     @FXML
     private void Test(MouseEvent event) {
         Debug.log(listtables.getFocusModel().getFocusedItem().toString());

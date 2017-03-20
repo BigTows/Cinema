@@ -5,6 +5,8 @@ package ru.bigtows.util;
  */
 public interface Observable {
     void registerObserver(Observer o);
+
     void removeObserver(Observer o);
+
     void notifyObservers();
 }

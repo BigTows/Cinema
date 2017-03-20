@@ -18,58 +18,58 @@ public class DataBase {
     private boolean status = false;
 
 
-
     public DataBase(String host, String name, String user, String password) {
         try {
-            connect = DriverManager.getConnection("jdbc:mysql://"+
-                    host +"/"+name+
-                    "?user="+user+"&password="+password);
+            connect = DriverManager.getConnection("jdbc:mysql://" +
+                    host + "/" + name +
+                    "?user=" + user + "&password=" + password);
             System.out.println("");
             Debug.log("[DataBase]: Connected success");
-            this.status=true;
-            this.dbname=name;
+            this.status = true;
+            this.dbname = name;
         } catch (SQLException ex) {
             Debug.log("[DataBase]: SQLException: " + ex.getMessage());
             Debug.log("[DataBase]: SQLState: " + ex.getSQLState());
             Debug.log("[DataBase]: VendorError: " + ex.getErrorCode());
         }
     }
-    public boolean getStatus(){
+
+    public boolean getStatus() {
         return this.status;
     }
 
-    public ObservableList<String> getTables() throws SQLException{
+    public ObservableList<String> getTables() throws SQLException {
         ObservableList<String> items = FXCollections.observableArrayList();
-        if (this.status){
+        if (this.status) {
             ResultSet rs = this.connect.createStatement().executeQuery("SHOW TABLES");
-            while (rs.next()){
+            while (rs.next()) {
                 items.add(rs.getString(1));
             }
-        }else{
+        } else {
             Debug.log("[DataBase]: Please reconnect");
         }
         return items;
     }
 
-    public HashMap<Integer,ArrayList<String>> getTable(String name) throws SQLException{
-        HashMap<Integer,ArrayList<String>> items = new HashMap<Integer,ArrayList<String>>();
+    public HashMap<Integer, ArrayList<String>> getTable(String name) throws SQLException {
+        HashMap<Integer, ArrayList<String>> items = new HashMap<Integer, ArrayList<String>>();
 
-        if (this.status){
-            ResultSet rs = this.connect.createStatement().executeQuery("SELECT * FROM "+name);
-            ResultSetMetaData rsmd =rs.getMetaData();
+        if (this.status) {
+            ResultSet rs = this.connect.createStatement().executeQuery("SELECT * FROM " + name);
+            ResultSetMetaData rsmd = rs.getMetaData();
             ArrayList<String> columnname = new ArrayList<String>();
-            for (int i=1;i<=rsmd.getColumnCount();i++){
+            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                 columnname.add(rsmd.getColumnName(i));
             }
-            items.put(0,columnname);
-            while (rs.next()){
+            items.put(0, columnname);
+            while (rs.next()) {
                 ArrayList<String> row = new ArrayList<String>();
-                for (int i=1; i<= rs.getMetaData().getColumnCount();i++){
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
                     row.add(rs.getString(i));
                 }
-                items.put(rs.getRow(),row);
+                items.put(rs.getRow(), row);
             }
-        }else{
+        } else {
             Debug.log("[DataBase]: Please reconnect");
         }
         return items;

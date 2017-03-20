@@ -26,5 +26,4 @@ public class Form extends Application {
     public static void init(String[] args) {
         launch(args);
     }
-
 }
