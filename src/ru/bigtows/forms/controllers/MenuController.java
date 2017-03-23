@@ -32,7 +32,6 @@ import java.util.HashMap;
  */
 public class MenuController {
 
-    private ObservableList<ObservableList> data;
 
     @FXML
     private ListView listtables;
@@ -53,36 +52,7 @@ public class MenuController {
                                         String old_val, String new_val) {
                         try {
                             table.getColumns().clear();
-                            data = FXCollections.observableArrayList();
-                            ResultSet rs = (Main.db.getTable(new_val));
-                            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-                                //We are using non property style for making dynamic table
-                                final int j = i;
-                                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
-                                col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-                                    public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
-                                        return new SimpleStringProperty(param.getValue().get(j).toString());
-                                    }
-                                });
-
-                                table.getColumns().addAll(col);
-                                System.out.println("Column [" + i + "] ");
-                            }
-
-                            while (rs.next()) {
-                                //Iterate Row
-                                ObservableList<String> row = FXCollections.observableArrayList();
-                                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                                    //Iterate Column
-                                    row.add(rs.getString(i));
-                                }
-                                System.out.println("Row [1] added " + row);
-                                data.add(row);
-
-                            }
-
-                            //FINALLY ADDED TO TableView
-                            table.setItems(data);
+                            Main.db.fillTableView(Main.db.getTable(new_val), table);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
