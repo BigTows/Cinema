@@ -51,27 +51,15 @@ public class DataBase {
         return items;
     }
 
-    public HashMap<Integer, ArrayList<String>> getTable(String name) throws SQLException {
-        HashMap<Integer, ArrayList<String>> items = new HashMap<Integer, ArrayList<String>>();
+    public ResultSet getTable(String name) throws SQLException {
 
         if (this.status) {
-            ResultSet rs = this.connect.createStatement().executeQuery("SELECT * FROM " + name);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            ArrayList<String> columnname = new ArrayList<String>();
-            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                columnname.add(rsmd.getColumnName(i));
-            }
-            items.put(0, columnname);
-            while (rs.next()) {
-                ArrayList<String> row = new ArrayList<String>();
-                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                    row.add(rs.getString(i));
-                }
-                items.put(rs.getRow(), row);
-            }
+            return this.connect.createStatement().executeQuery("SELECT * FROM " + name);
+
+
         } else {
             Debug.log("[DataBase]: Please reconnect");
         }
-        return items;
+        return null;
     }
 }

@@ -29,7 +29,7 @@ public class LoginController {
 
     @FXML
     private void onClickLogin(MouseEvent event) throws Exception {
-        Main.db = new DataBase(host.getText(), "test", user.getText(), password.getText());
+        Main.db = new DataBase(host.getText(), "Cinema", user.getText(), password.getText());
         if (!Main.db.getStatus()) {
             Alert alert = new Alert(ERROR);
             alert.setTitle("Ошибка подключения");
