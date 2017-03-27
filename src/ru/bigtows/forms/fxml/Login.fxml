@@ -16,7 +16,7 @@
             <children>
                 <TextField fx:id="host" prefHeight="27.0" prefWidth="133.0" promptText="Имя хоста" text="localhost"/>
                 <TextField fx:id="user" alignment="TOP_CENTER" prefHeight="27.0" prefWidth="133.0"
-                           promptText="Имя пользователя"/>
+                           promptText="Имя пользователя" text="root"/>
                 <PasswordField fx:id="password" alignment="TOP_CENTER" prefHeight="27.0" prefWidth="133.0"
                                promptText="Пароль"/>
             </children>

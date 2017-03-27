@@ -43,21 +43,9 @@ public class MenuController {
         try {
             listtables.setItems(Main.db.getTables());
         } catch (SQLException e) {
-            Debug.log("[Form Menu]: Update ListTables Error");
+            Debug.log("[Form Menu]: Update ListTables failed");
         }
 
-        listtables.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<String>() {
-                    public void changed(ObservableValue<? extends String> ov,
-                                        String old_val, String new_val) {
-                        try {
-                            table.getColumns().clear();
-                            Main.db.fillTableView(Main.db.getTable(new_val), table);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
 
     }
 
