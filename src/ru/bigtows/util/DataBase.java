@@ -6,10 +6,17 @@ package ru.bigtows.util;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import ru.bigtows.util.classes.Cinema;
+import ru.bigtows.util.classes.Country;
+import ru.bigtows.util.classes.Film;
+import ru.bigtows.util.classes.TypeSession;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DataBase {
 
@@ -51,27 +58,191 @@ public class DataBase {
         return items;
     }
 
-    public HashMap<Integer, ArrayList<String>> getTable(String name) throws SQLException {
-        HashMap<Integer, ArrayList<String>> items = new HashMap<Integer, ArrayList<String>>();
 
+    public ObservableList<Country> getCountryTable() throws SQLException {
+        ObservableList<Country> data = FXCollections.observableArrayList();
+        ResultSet dataTable = null;
         if (this.status) {
-            ResultSet rs = this.connect.createStatement().executeQuery("SELECT * FROM " + name);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            ArrayList<String> columnname = new ArrayList<String>();
-            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                columnname.add(rsmd.getColumnName(i));
+            dataTable = this.connect.createStatement().executeQuery("call getCountry");
+
+            while (dataTable.next()) {
+                Country country = new Country(dataTable.getString(2),
+                        dataTable.getString(1));
+                data.add(country);
             }
-            items.put(0, columnname);
-            while (rs.next()) {
-                ArrayList<String> row = new ArrayList<String>();
-                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                    row.add(rs.getString(i));
-                }
-                items.put(rs.getRow(), row);
-            }
-        } else {
-            Debug.log("[DataBase]: Please reconnect");
         }
-        return items;
+        return data;
     }
+
+    public ObservableList<Film> getFilmTable() throws SQLException {
+        ObservableList<Film> data = FXCollections.observableArrayList();
+        if (this.status) {
+            ResultSet dataTable;
+            dataTable = this.connect.createStatement().executeQuery("call getFilm");
+            while (dataTable.next()) {
+                Film film = new Film(dataTable.getString(1),
+                        dataTable.getString(2), dataTable.getString(3), dataTable.getString(4));
+                data.add(film);
+            }
+        }
+        return data;
+    }
+
+    public ObservableList<Cinema> getCinemaTable() {
+        ObservableList<Cinema> data = FXCollections.observableArrayList();
+        if (this.status) {
+            ResultSet dataTable;
+            try {
+                dataTable = this.connect.createStatement().executeQuery("call getCinema");
+                while (dataTable.next()) {
+                    Cinema cinema = new Cinema(dataTable.getString(1),
+                            dataTable.getString(2), dataTable.getString(3));
+                    data.add(cinema);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return data;
+    }
+
+    public ObservableList<TypeSession> getTypeSessionTable() {
+        ObservableList<TypeSession> data = FXCollections.observableArrayList();
+        if (this.status) {
+            ResultSet dataTable;
+            try {
+                dataTable = this.connect.createStatement().executeQuery("call getTypeSession");
+                while (dataTable.next()) {
+                    TypeSession typeSession = new TypeSession(dataTable.getString(1),
+                            dataTable.getString(2));
+                    data.add(typeSession);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return data;
+    }
+
+    private void fillFilm(TableView table) throws SQLException {
+        table.getColumns().addAll(
+                Columns.getColumn("Номер фильма", new PropertyValueFactory<Film, String>("id"),
+                        t -> ((Film) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setCountry(t.getNewValue())),
+                Columns.getColumn("Название", new PropertyValueFactory<Film, String>("name"),
+                        t -> ((Film) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setName(t.getNewValue())),
+                Columns.getColumn("Длительность", new PropertyValueFactory<Film, String>("duration"),
+                        t -> ((Film) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setDuration(t.getNewValue())),
+                Columns.getColumn("Номер страны", new PropertyValueFactory<Film, String>("idC"),
+                        t -> ((Film) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setCountry(t.getNewValue())));
+
+        table.setItems(getFilmTable());
+
+    }
+
+    private void fillCountry(TableView table) throws SQLException {
+        table.getColumns().addAll(
+                Columns.getColumn("Название", new PropertyValueFactory<Country, String>("name"),
+                        t -> ((Country) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setName(t.getNewValue())),
+                Columns.getColumn("Номер", new PropertyValueFactory<Country, String>("id"),
+                        t -> ((Country) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setId(t.getNewValue())));
+
+
+        table.setItems(getCountryTable());
+    }
+
+    private void fillTypeSession(TableView table) throws SQLException {
+        table.getColumns().addAll(
+                Columns.getColumn("Номер типа", new PropertyValueFactory<TypeSession, String>("id"),
+                        t -> ((TypeSession) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setId(t.getNewValue())),
+                Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<TypeSession, String>("name"),
+                        t -> ((TypeSession) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setName(t.getNewValue())));
+
+        table.setItems(getTypeSessionTable());
+    }
+
+    private void fillCinema(TableView table) throws SQLException {
+        table.getColumns().addAll(
+                Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Cinema, String>("id"),
+                        t -> ((Cinema) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setId(t.getNewValue())),
+                Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Cinema, String>("name"),
+                        t -> ((Cinema) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setName(t.getNewValue())),
+                Columns.getColumn("Адрес",
+                        new PropertyValueFactory<Cinema, String>("address"),
+                        t -> ((Cinema) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setAddress(t.getNewValue()))
+        );
+        table.setItems(getCinemaTable());
+
+    }
+
+    private void fillSession(TableView table) throws SQLException {
+
+    }
+
+    public void fillTable(String nameTable, TableView table) {
+        table.getColumns().clear();
+        switch (nameTable.toLowerCase()) {
+            case "country": {
+                try {
+                    fillCountry(table);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case "film": {
+                try {
+                    fillFilm(table);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case "cinema": {
+                try {
+                    fillCinema(table);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case "type_session": {
+                try {
+                    fillTypeSession(table);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case "session": {
+                try {
+                    fillSession(table);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 }
