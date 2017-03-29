@@ -172,7 +172,7 @@ public class DataBase {
                         t -> ((TypeSession) t.getTableView().getItems().get(
                                 t.getTablePosition().getRow())
                         ).setName(t.getNewValue())));
-
+
         table.setItems(getTypeSessionTable());
     }
 
