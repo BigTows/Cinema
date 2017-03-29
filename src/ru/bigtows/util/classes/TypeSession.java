@@ -3,13 +3,14 @@ package ru.bigtows.util.classes;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
- * Created by bigtows on 27/03/2017.
+ * Created by bigtows on 29/03/2017.
  */
-public class Country {
+public class TypeSession {
     private final SimpleStringProperty id;
     private final SimpleStringProperty name;
 
-    public Country(String id, String name) {
+
+    public TypeSession(String id, String name) {
         this.id = new SimpleStringProperty(id);
         this.name = new SimpleStringProperty(name);
     }
@@ -22,6 +23,7 @@ public class Country {
         return id.get();
     }
 
+
     public void setId(String id) {
         this.id.set(id);
     }
@@ -29,5 +31,4 @@ public class Country {
     public void setName(String name) {
         this.name.set(name);
     }
-
 }
