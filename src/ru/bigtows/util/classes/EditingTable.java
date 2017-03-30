@@ -63,7 +63,6 @@ public class EditingTable extends TableCell<Country, String> {
     }
 
     private String getString() {
-
         return getItem() == null ? "" : getItem().toString();
     }
 }

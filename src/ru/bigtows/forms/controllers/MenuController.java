@@ -10,6 +10,10 @@ import ru.bigtows.util.Debug;
 
 import java.sql.SQLException;
 
+import static ru.bigtows.util.classes.Cinema.fillCinema;
+import static ru.bigtows.util.classes.Country.fillCountry;
+import static ru.bigtows.util.classes.Film.fillFilm;
+
 /**
  * Created by bigtows on 19/03/2017.
  */
@@ -36,6 +40,45 @@ public class MenuController {
 
     @FXML
     private void Test(MouseEvent event) {
-        Main.db.fillTable(listtables.getFocusModel().getFocusedItem().toString(), table, hb);
+        fillTable(listtables.getFocusModel().getFocusedItem().toString(), table, hb);
+    }
+
+    public static void fillTable(String nameTable, TableView table, HBox hb) {
+        table.getColumns().clear();
+        hb.getChildren().clear();
+        switch (nameTable.toLowerCase()) {
+            case "country": {
+                try {
+                    fillCountry(table, hb);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case "film": {
+
+                try {
+                    fillFilm(table);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case "cinema": {
+                try {
+                    fillCinema(table, hb);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case "type_session": {
+                //fillTypeSession(table);
+                break;
+            }
+            case "session": {
+                //fillSession(table);
+            }
+        }
     }
 }

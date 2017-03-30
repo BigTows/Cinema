@@ -6,14 +6,9 @@ package ru.bigtows.util;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import ru.bigtows.util.classes.*;
 
 import java.sql.Connection;
@@ -166,7 +161,7 @@ public class DataBase {
 
     }
 
-    private void addCountry(String name) {
+    public void addCountry(String name) {
         try {
             this.connect.createStatement().executeQuery("call addCountry('" + name + "')");
         } catch (SQLException e) {
@@ -177,32 +172,15 @@ public class DataBase {
         }
     }
 
-    private void fillCountry(TableView table, HBox hb) throws SQLException {
-        table.getColumns().addAll(
-                Columns.getColumn("Название", new PropertyValueFactory<Country, String>("name"),
-                        t -> ((Country) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setName(t.getNewValue())),
-                Columns.getColumn("Номер", new PropertyValueFactory<Country, String>("id"),
-                        t -> ((Country)
-                                t.getTableView().getItems().get(
-                                        t.getTablePosition().getRow())
-                        ).setId(t.getNewValue())));
-
-
-        table.setItems(getCountryTable());
-        final TextField addLastName = new TextField();
-        addLastName.setPromptText("Название");
-        final Button addButton = new Button("Отправить");
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                addCountry(addLastName.getText());
-                fillTable("country", table, hb);
-            }
-        });
-        hb.getChildren().addAll(addLastName, addButton);
+    public void updateCountry(Country country, String oldID) {
+        try {
+            this.connect.createStatement().executeQuery("call updateCountry(" + country.getId() +
+                    ",'" + country.getName() + "'," + oldID + ")");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 
     private void fillTypeSession(TableView table) throws SQLException {
         table.getColumns().addAll(
@@ -218,25 +196,7 @@ public class DataBase {
         table.setItems(getTypeSessionTable());
     }
 
-    private void fillCinema(TableView table) throws SQLException {
-        table.getColumns().addAll(
-                Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Cinema, String>("id"),
-                        t -> ((Cinema) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setId(t.getNewValue())),
-                Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Cinema, String>("name"),
-                        t -> ((Cinema) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setName(t.getNewValue())),
-                Columns.getColumn("Адрес",
-                        new PropertyValueFactory<Cinema, String>("address"),
-                        t -> ((Cinema) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setAddress(t.getNewValue()))
-        );
-        table.setItems(getCinemaTable());
 
-    }
 
     private void fillSession(TableView table) throws SQLException {
         table.getColumns().addAll(
@@ -269,51 +229,36 @@ public class DataBase {
 
     }
 
-
-    public void fillTable(String nameTable, TableView table, HBox hb) {
-        table.getColumns().clear();
-        hb.getChildren().clear();
-        switch (nameTable.toLowerCase()) {
-            case "country": {
-                try {
-                    fillCountry(table, hb);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
-            case "film": {
-                try {
-                    fillFilm(table);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
-            case "cinema": {
-                try {
-                    fillCinema(table);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
-            case "type_session": {
-                try {
-                    fillTypeSession(table);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
-            case "session": {
-                try {
-                    fillSession(table);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+    public void updateFilm(Film rowValue, String id) {
+        try {
+            String sqlQuery = "call updateFilm(" + rowValue.getId() + "," + rowValue.getIdC()
+                    + ",'" + rowValue.getName() + "'," + rowValue.getDuration() + "," + id + ")";
+            Debug.log(sqlQuery);
+            this.connect.createStatement().executeQuery(sqlQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
+    public void updateCinema(Cinema rowValue, String id) {
+        try {
+            String sqlQuery = "call updateCinema(" + rowValue.getId() + ",'" + rowValue.getName() +
+                    "','" + rowValue.getAddress() + "'," + id + ")";
+            Debug.log(sqlQuery);
+            this.connect.createStatement().executeQuery(sqlQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addCinema(String name, String address) {
+        try {
+            this.connect.createStatement().executeQuery("call addCinema('" + name + "','" + address + "')");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
 }

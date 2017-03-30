@@ -32,4 +32,22 @@ public class Columns {
 
 
     }
+
+    public static TableColumn getColumn(String name, PropertyValueFactory<?, String> pvf) {
+
+        TableColumn column = new TableColumn(name);
+
+        column.setMinWidth(100);
+        Callback<TableColumn, TableCell> cellFactory =
+                new Callback<TableColumn, TableCell>() {
+                    public TableCell call(TableColumn p) {
+                        return new EditingTable();
+                    }
+                };
+        column.setCellValueFactory(pvf);
+        column.setCellFactory(cellFactory);
+        return column;
+
+
+    }
 }
