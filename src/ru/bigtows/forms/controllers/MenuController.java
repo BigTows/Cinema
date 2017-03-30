@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import ru.bigtows.Main;
 import ru.bigtows.util.Debug;
 
@@ -21,6 +22,8 @@ public class MenuController {
     private TableView table;
 
     @FXML
+    private HBox hb;
+    @FXML
     public void initialize() {
         try {
             listtables.setItems(Main.db.getTables());
@@ -33,6 +36,6 @@ public class MenuController {
 
     @FXML
     private void Test(MouseEvent event) {
-        Main.db.fillTable(listtables.getFocusModel().getFocusedItem().toString(), table);
+        Main.db.fillTable(listtables.getFocusModel().getFocusedItem().toString(), table, hb);
     }
 }

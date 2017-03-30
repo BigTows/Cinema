@@ -6,12 +6,15 @@ package ru.bigtows.util;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import ru.bigtows.util.classes.Cinema;
-import ru.bigtows.util.classes.Country;
-import ru.bigtows.util.classes.Film;
-import ru.bigtows.util.classes.TypeSession;
+import javafx.scene.layout.HBox;
+import ru.bigtows.util.classes.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,7 +33,6 @@ public class DataBase {
             connect = DriverManager.getConnection("jdbc:mysql://" +
                     host + "/" + name +
                     "?user=" + user + "&password=" + password);
-            System.out.println("");
             Debug.log("[DataBase]: Connected success");
             this.status = true;
             this.dbname = name;
@@ -83,6 +85,23 @@ public class DataBase {
                 Film film = new Film(dataTable.getString(1),
                         dataTable.getString(2), dataTable.getString(3), dataTable.getString(4));
                 data.add(film);
+            }
+        }
+        return data;
+    }
+
+    private ObservableList<Session> getSessionTable() throws SQLException {
+        ObservableList<Session> data = FXCollections.observableArrayList();
+        if (this.status) {
+            ResultSet dataTable;
+            dataTable = this.connect.createStatement().executeQuery("call getSession");
+            while (dataTable.next()) {
+                Session session = new Session(dataTable.getString(1),
+                        dataTable.getString(2), dataTable.getString(3),
+                        dataTable.getString(4),
+                        dataTable.getString(5),
+                        dataTable.getString(6));
+                data.add(session);
             }
         }
         return data;
@@ -147,19 +166,42 @@ public class DataBase {
 
     }
 
-    private void fillCountry(TableView table) throws SQLException {
+    private void addCountry(String name) {
+        try {
+            this.connect.createStatement().executeQuery("call addCountry('" + name + "')");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    private void fillCountry(TableView table, HBox hb) throws SQLException {
         table.getColumns().addAll(
                 Columns.getColumn("Название", new PropertyValueFactory<Country, String>("name"),
                         t -> ((Country) t.getTableView().getItems().get(
                                 t.getTablePosition().getRow())
                         ).setName(t.getNewValue())),
                 Columns.getColumn("Номер", new PropertyValueFactory<Country, String>("id"),
-                        t -> ((Country) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
+                        t -> ((Country)
+                                t.getTableView().getItems().get(
+                                        t.getTablePosition().getRow())
                         ).setId(t.getNewValue())));
 
 
         table.setItems(getCountryTable());
+        final TextField addLastName = new TextField();
+        addLastName.setPromptText("Название");
+        final Button addButton = new Button("Отправить");
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                addCountry(addLastName.getText());
+                fillTable("country", table, hb);
+            }
+        });
+        hb.getChildren().addAll(addLastName, addButton);
     }
 
     private void fillTypeSession(TableView table) throws SQLException {
@@ -172,7 +214,7 @@ public class DataBase {
                         t -> ((TypeSession) t.getTableView().getItems().get(
                                 t.getTablePosition().getRow())
                         ).setName(t.getNewValue())));
-
+
         table.setItems(getTypeSessionTable());
     }
 
@@ -197,15 +239,44 @@ public class DataBase {
     }
 
     private void fillSession(TableView table) throws SQLException {
+        table.getColumns().addAll(
+                Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"),
+                        t -> ((Session) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setId(t.getNewValue())),
+                Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"),
+                        t -> ((Session) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setIdR(t.getNewValue())),
+                Columns.getColumn("Номер фильма",
+                        new PropertyValueFactory<Session, String>("idF"),
+                        t -> ((Session) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setIdF(t.getNewValue())),
+                Columns.getColumn("Номер типа",
+                        new PropertyValueFactory<Session, String>("idT"),
+                        t -> ((Session) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setIdT(t.getNewValue())),
+                Columns.getColumn("Дата",
+                        new PropertyValueFactory<Session, String>("date"),
+                        t -> ((Session) t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setDate(t.getNewValue()))
+
+        );
+        table.setItems(getSessionTable());
 
     }
 
-    public void fillTable(String nameTable, TableView table) {
+
+    public void fillTable(String nameTable, TableView table, HBox hb) {
         table.getColumns().clear();
+        hb.getChildren().clear();
         switch (nameTable.toLowerCase()) {
             case "country": {
                 try {
-                    fillCountry(table);
+                    fillCountry(table, hb);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

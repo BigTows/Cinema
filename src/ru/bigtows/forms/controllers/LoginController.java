@@ -3,7 +3,10 @@ package ru.bigtows.forms.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import ru.bigtows.Main;
 import ru.bigtows.forms.Form;
@@ -37,7 +40,7 @@ public class LoginController {
             alert.setContentText("Проверьте данные входа!");
             alert.showAndWait();
         } else {
-            Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Menu.fxml")), 500, 300));
+            Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Menu.fxml")), 650, 400));
         }
     }
 }
