@@ -7,14 +7,13 @@ package ru.bigtows.util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import ru.bigtows.util.classes.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class DataBase {
 
@@ -85,7 +84,7 @@ public class DataBase {
         return data;
     }
 
-    private ObservableList<Session> getSessionTable() throws SQLException {
+    public ObservableList<Session> getSessionTable() throws SQLException {
         ObservableList<Session> data = FXCollections.observableArrayList();
         if (this.status) {
             ResultSet dataTable;
@@ -138,28 +137,6 @@ public class DataBase {
         return data;
     }
 
-    private void fillFilm(TableView table) throws SQLException {
-        table.getColumns().addAll(
-                Columns.getColumn("Номер фильма", new PropertyValueFactory<Film, String>("id"),
-                        t -> ((Film) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setCountry(t.getNewValue())),
-                Columns.getColumn("Название", new PropertyValueFactory<Film, String>("name"),
-                        t -> ((Film) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setName(t.getNewValue())),
-                Columns.getColumn("Длительность", new PropertyValueFactory<Film, String>("duration"),
-                        t -> ((Film) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setDuration(t.getNewValue())),
-                Columns.getColumn("Номер страны", new PropertyValueFactory<Film, String>("idC"),
-                        t -> ((Film) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setCountry(t.getNewValue())));
-
-        table.setItems(getFilmTable());
-
-    }
 
     public void addCountry(String name) {
         try {
@@ -182,52 +159,18 @@ public class DataBase {
     }
 
 
-    private void fillTypeSession(TableView table) throws SQLException {
-        table.getColumns().addAll(
-                Columns.getColumn("Номер типа", new PropertyValueFactory<TypeSession, String>("id"),
-                        t -> ((TypeSession) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setId(t.getNewValue())),
-                Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<TypeSession, String>("name"),
-                        t -> ((TypeSession) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setName(t.getNewValue())));
-
-        table.setItems(getTypeSessionTable());
+    public void updateSession(Session rowValue, String oldId) {
+        try {
+            String sqlQuery = "call updateSession(" + rowValue.getId() + "," + rowValue.getIdR()
+                    + "," + rowValue.getIdT() + "," + rowValue.getIdF() + ",'" + rowValue.getDate() + "'," + rowValue.getIdC() + "," + oldId + ")";
+            Debug.log(sqlQuery);
+            this.connect.createStatement().executeQuery(sqlQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
-
-    private void fillSession(TableView table) throws SQLException {
-        table.getColumns().addAll(
-                Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"),
-                        t -> ((Session) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setId(t.getNewValue())),
-                Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"),
-                        t -> ((Session) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setIdR(t.getNewValue())),
-                Columns.getColumn("Номер фильма",
-                        new PropertyValueFactory<Session, String>("idF"),
-                        t -> ((Session) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setIdF(t.getNewValue())),
-                Columns.getColumn("Номер типа",
-                        new PropertyValueFactory<Session, String>("idT"),
-                        t -> ((Session) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setIdT(t.getNewValue())),
-                Columns.getColumn("Дата",
-                        new PropertyValueFactory<Session, String>("date"),
-                        t -> ((Session) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setDate(t.getNewValue()))
-
-        );
-        table.setItems(getSessionTable());
-
-    }
 
     public void updateFilm(Film rowValue, String id) {
         try {
@@ -251,9 +194,55 @@ public class DataBase {
         }
     }
 
+
     public void addCinema(String name, String address) {
         try {
             this.connect.createStatement().executeQuery("call addCinema('" + name + "','" + address + "')");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    public void addFilm(String name, String duration, String country) {
+        try {
+            this.connect.createStatement().executeQuery("call addFilm('" + name + "'," + duration +
+                    "," + country + ")");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    public void updateTypeSession(TypeSession rowValue, String id) {
+        try {
+            String sqlQuery = "call updateTypeSession(" + rowValue.getId() + ",'" + rowValue.getName() +
+                    "'," + id + ")";
+            Debug.log(sqlQuery);
+            this.connect.createStatement().executeQuery(sqlQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addTypeSession(String name) {
+        try {
+            this.connect.createStatement().executeQuery("call addTypeSession('" + name + "')");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    public void addSession(String idR, String idF, String idT, String idC, LocalDate date) {
+        try {
+            this.connect.createStatement().executeQuery("call addSession(" + idT + "," + idC + "," + idF + ",'" + date + "'," + idR + ")");
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Error code: " + e.getErrorCode());

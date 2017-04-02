@@ -1,15 +1,19 @@
 package ru.bigtows.util.classes;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import ru.bigtows.Main;
+import ru.bigtows.forms.controllers.MenuController;
 import ru.bigtows.util.Columns;
 import ru.bigtows.util.DataBase;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  * Created by bigtows on 29/03/2017.
@@ -28,7 +32,7 @@ public class Film {
         this.idC = new SimpleStringProperty(id_country);
     }
 
-    public static void fillFilm(TableView table) throws SQLException {
+    public static void fillFilm(TableView table, HBox hb) throws SQLException {
         DataBase dbConnector = Main.db;
         TableColumn id = Columns.getColumn("Номер фильма", new PropertyValueFactory<Film, String>("id"));
         TableColumn name = Columns.getColumn("Название", new PropertyValueFactory<Film, String>("name"));
@@ -79,6 +83,30 @@ public class Film {
 
         table.getColumns().addAll(id, name, duration, idCountry);
         table.setItems(dbConnector.getFilmTable());
+        /**
+         * Add Buttons for input
+         */
+        final TextField nameField = new TextField();
+        nameField.setPromptText("Название");
+        final TextField durationField = new TextField();
+        durationField.setPromptText("Длительность");
+        final ComboBox countryComboBox = new ComboBox();
+        HashMap<String, String> countrysMap = new HashMap<>();
+        ObservableList<Country> countrysList = Main.db.getCountryTable();
+        countrysList.forEach((tab) -> {
+            countrysMap.put(tab.getName(), tab.getId());
+            countryComboBox.getItems().addAll(tab.getName());
+        });
+
+        final Button addButton = new Button("Отправить");
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                dbConnector.addFilm(nameField.getText(), durationField.getText(), countrysMap.get(countryComboBox.getSelectionModel().getSelectedItem().toString()));
+                MenuController.fillTable("film", table, hb);
+            }
+        });
+        hb.getChildren().addAll(nameField, durationField, countryComboBox, addButton);
 
     }
 

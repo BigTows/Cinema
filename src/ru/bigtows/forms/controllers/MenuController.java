@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import static ru.bigtows.util.classes.Cinema.fillCinema;
 import static ru.bigtows.util.classes.Country.fillCountry;
 import static ru.bigtows.util.classes.Film.fillFilm;
+import static ru.bigtows.util.classes.Session.fillSession;
+import static ru.bigtows.util.classes.TypeSession.fillTypeSession;
 
 /**
  * Created by bigtows on 19/03/2017.
@@ -58,7 +60,7 @@ public class MenuController {
             case "film": {
 
                 try {
-                    fillFilm(table);
+                    fillFilm(table, hb);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -73,11 +75,19 @@ public class MenuController {
                 break;
             }
             case "type_session": {
-                //fillTypeSession(table);
+                try {
+                    fillTypeSession(table, hb);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             }
             case "session": {
-                //fillSession(table);
+                try {
+                    fillSession(table, hb);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

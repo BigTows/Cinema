@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS `Cinema`;
 CREATE TABLE `Cinema` (
   `number_cinema` INT(11)      NOT NULL AUTO_INCREMENT,
   `name`          VARCHAR(50)  NOT NULL,
-  `address`       VARCHAR(256) NOT NULL,
+  `address`       VARCHAR(256) NOT NULL CHECK (LENGTH(address > 10)),
   PRIMARY KEY (`number_cinema`)
 )
   ENGINE = InnoDB
