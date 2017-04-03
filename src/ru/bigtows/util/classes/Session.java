@@ -135,6 +135,13 @@ public class Session {
 
         DatePicker datePicker = new DatePicker();
 
+        ComboBox hourComboBox = new ComboBox();
+        ComboBox minuteComboBox = new ComboBox();
+        for (int i = 1; i <= 60; i++) {
+            if (i <= 24) hourComboBox.getItems().addAll(i);
+            minuteComboBox.getItems().addAll(i);
+        }
+
 
         final Button addButton = new Button("Отправить");
         addButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -144,11 +151,12 @@ public class Session {
                         filmMap.get(filmComboBox.getSelectionModel().getSelectedItem().toString()),
                         typeSessionMap.get(typeSessionComboBox.getSelectionModel().getSelectedItem().toString()),
                         cinemaMap.get(cinemaComboBox.getSelectionModel().getSelectedItem().toString()),
-                        datePicker.getValue());
+                        ((datePicker.getValue().toString() + " " + hourComboBox.getSelectionModel().getSelectedItem().toString() + ":" + minuteComboBox.getSelectionModel().getSelectedItem().toString() + ":00")));
                 MenuController.fillTable("session", table, hb);
             }
         });
-        hb.getChildren().addAll(idRField, filmComboBox, typeSessionComboBox, cinemaComboBox, datePicker, addButton);
+        hb.getChildren().addAll(idRField, filmComboBox, typeSessionComboBox, cinemaComboBox, datePicker,
+                hourComboBox, minuteComboBox, addButton);
     }
 
     public String getIdR() {

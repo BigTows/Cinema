@@ -13,7 +13,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 public class DataBase {
 
@@ -240,7 +239,7 @@ public class DataBase {
         }
     }
 
-    public void addSession(String idR, String idF, String idT, String idC, LocalDate date) {
+    public void addSession(String idR, String idF, String idT, String idC, String date) {
         try {
             this.connect.createStatement().executeQuery("call addSession(" + idT + "," + idC + "," + idF + ",'" + date + "'," + idR + ")");
         } catch (SQLException e) {
