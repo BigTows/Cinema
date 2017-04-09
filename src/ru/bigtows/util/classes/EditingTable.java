@@ -10,6 +10,9 @@ public class EditingTable extends TableCell<Country, String> {
 
     private TextField textField;
 
+    public static String selectedTable = null;
+    public static String selectedIDTable = null;
+
     public EditingTable() {
 
     }

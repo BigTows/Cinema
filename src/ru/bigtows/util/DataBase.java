@@ -17,7 +17,6 @@ import java.sql.SQLException;
 public class DataBase {
 
     private Connection connect = null;
-    private String dbname = null;
     private boolean status = false;
 
 
@@ -28,7 +27,6 @@ public class DataBase {
                     "?user=" + user + "&password=" + password);
             Debug.log("[DataBase]: Connected success");
             this.status = true;
-            this.dbname = name;
         } catch (SQLException ex) {
             Debug.log("[DataBase]: SQLException: " + ex.getMessage());
             Debug.log("[DataBase]: SQLState: " + ex.getSQLState());
@@ -56,9 +54,8 @@ public class DataBase {
 
     public ObservableList<Country> getCountryTable() throws SQLException {
         ObservableList<Country> data = FXCollections.observableArrayList();
-        ResultSet dataTable = null;
         if (this.status) {
-            dataTable = this.connect.createStatement().executeQuery("call getCountry");
+            ResultSet dataTable = this.connect.createStatement().executeQuery("call getCountry");
 
             while (dataTable.next()) {
                 Country country = new Country(dataTable.getString(2),
@@ -149,9 +146,13 @@ public class DataBase {
     }
 
     public void updateCountry(Country country, String oldID) {
+        Debug.log("sd");
         try {
-            this.connect.createStatement().executeQuery("call updateCountry(" + country.getId() +
-                    ",'" + country.getName() + "'," + oldID + ")");
+            String sql = "call updateCountry(" + country.getId() +
+                    ",'" + country.getName() + "'," + oldID + ")";
+            Debug.log(sql);
+            this.connect.createStatement().executeQuery(sql);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -242,6 +243,17 @@ public class DataBase {
     public void addSession(String idR, String idF, String idT, String idC, String date) {
         try {
             this.connect.createStatement().executeQuery("call addSession(" + idT + "," + idC + "," + idF + ",'" + date + "'," + idR + ")");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    public void removeFilm(String id) {
+        try {
+            this.connect.createStatement().executeQuery("call removeFilm(" + id + ")");
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Error code: " + e.getErrorCode());

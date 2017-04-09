@@ -74,7 +74,7 @@ public class Cinema {
         final TextField nameField = new TextField();
         nameField.setPromptText("Название");
         final TextField addressField = new TextField();
-        addressField.setPromptText("Длительность");
+        addressField.setPromptText("Адрес");
 
         final Button addButton = new Button("Отправить");
         addButton.setOnAction(new EventHandler<ActionEvent>() {

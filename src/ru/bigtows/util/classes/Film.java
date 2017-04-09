@@ -1,6 +1,8 @@
 package ru.bigtows.util.classes;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,6 +13,7 @@ import ru.bigtows.Main;
 import ru.bigtows.forms.controllers.MenuController;
 import ru.bigtows.util.Columns;
 import ru.bigtows.util.DataBase;
+import ru.bigtows.util.Debug;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -82,6 +85,24 @@ public class Film {
         });
 
         table.getColumns().addAll(id, name, duration, idCountry);
+        table.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Film>() {
+                    @Override
+                    public void changed(
+                            ObservableValue<? extends Film> observable,
+                            Film oldValue,
+                            Film newValue
+                    ) {
+                        if (newValue == null) {
+                            Debug.log("");
+                            return;
+                        }
+                        EditingTable.selectedTable = "film";
+                        EditingTable.selectedIDTable = newValue.getId();
+                    }
+                }
+        );
+
         table.setItems(dbConnector.getFilmTable());
         /**
          * Add Buttons for input

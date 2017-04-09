@@ -1,12 +1,16 @@
 package ru.bigtows.forms.controllers;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import ru.bigtows.Main;
 import ru.bigtows.util.Debug;
+import ru.bigtows.util.classes.EditingTable;
 
 import java.sql.SQLException;
 
@@ -28,9 +32,30 @@ public class MenuController {
     private TableView table;
 
     @FXML
+    private MenuItem deleteSubMenu;
+
+    @FXML
     private HBox hb;
     @FXML
     public void initialize() {
+
+        deleteSubMenu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (EditingTable.selectedTable == null) {
+                    //@TODO add Alert
+                    Debug.log("First select row");
+                } else {
+                    switch (EditingTable.selectedTable.toLowerCase()) {
+                        case "film":
+                            Main.db.removeFilm(EditingTable.selectedIDTable);
+                    }
+                    fillTable("film", table, hb);
+                    EditingTable.selectedTable = null;
+                }
+            }
+        });
+
         try {
             listtables.setItems(Main.db.getTables());
         } catch (SQLException e) {

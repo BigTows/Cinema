@@ -112,6 +112,7 @@ public class Session {
          * Clean this
          */
         ComboBox filmComboBox = new ComboBox();
+        filmComboBox.setPromptText("Фильм");
         HashMap<String, String> filmMap = new HashMap<>();
         Main.db.getFilmTable().forEach((tab) -> {
             filmMap.put(tab.getName(), tab.getId());
@@ -119,6 +120,7 @@ public class Session {
         });
 
         ComboBox typeSessionComboBox = new ComboBox();
+        typeSessionComboBox.setPromptText("Вид сеанса");
         HashMap<String, String> typeSessionMap = new HashMap<>();
         Main.db.getTypeSessionTable().forEach((tab) -> {
             typeSessionMap.put(tab.getName(), tab.getId());
@@ -127,6 +129,7 @@ public class Session {
 
 
         ComboBox cinemaComboBox = new ComboBox();
+        cinemaComboBox.setPromptText("Кинотеатры");
         HashMap<String, String> cinemaMap = new HashMap<>();
         Main.db.getCinemaTable().forEach((tab) -> {
             cinemaMap.put(tab.getName(), tab.getId());
@@ -136,7 +139,9 @@ public class Session {
         DatePicker datePicker = new DatePicker();
 
         ComboBox hourComboBox = new ComboBox();
+        hourComboBox.setPromptText("Часы");
         ComboBox minuteComboBox = new ComboBox();
+        minuteComboBox.setPromptText("Минуты");
         for (int i = 1; i <= 60; i++) {
             if (i <= 24) hourComboBox.getItems().addAll(i);
             minuteComboBox.getItems().addAll(i);

@@ -6,6 +6,6 @@
 
 >TODO
 * add mode Edit
-* add Admin panel
+* add Admin panel 
 ## Backup mysql command
 >mysqldump -u root --routines --databases Cinema > ~/Documents/IdeaProjects/Cinema/backup.sql

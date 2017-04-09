@@ -14,7 +14,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                        <MenuItem fx:id="deleteSubMenu" mnemonicParsing="false" text="Delete"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -26,16 +26,24 @@
         </MenuBar>
     </top>
     <left>
-        <ListView fx:id="listtables" onMouseClicked="#Test" prefHeight="361.0" prefWidth="148.0"
-                  BorderPane.alignment="CENTER"/>
+        <ListView fx:id="listtables" onMouseClicked="#Test" prefHeight="337.0" prefWidth="148.0"
+                  BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="20.0"/>
+            </padding>
+            <BorderPane.margin>
+                <Insets/>
+            </BorderPane.margin>
+        </ListView>
     </left>
     <center>
         <TableView fx:id="table" editable="true" prefHeight="294.0" prefWidth="462.0" BorderPane.alignment="CENTER"/>
     </center>
     <bottom>
-        <HBox fx:id="hb" prefHeight="100.0" prefWidth="356.0" spacing="3.0" BorderPane.alignment="CENTER">
+        <HBox fx:id="hb" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="356.0" spacing="3.0"
+              BorderPane.alignment="CENTER">
             <BorderPane.margin>
-                <Insets left="150.0"/>
+                <Insets/>
             </BorderPane.margin>
         </HBox>
     </bottom>
