@@ -13,6 +13,7 @@ import ru.bigtows.Main;
 import ru.bigtows.forms.controllers.MenuController;
 import ru.bigtows.util.Columns;
 import ru.bigtows.util.DataBase;
+import ru.bigtows.util.Debug;
 
 import java.sql.SQLException;
 
@@ -68,7 +69,11 @@ public class TypeSession {
             }
         });
         hb.getChildren().addAll(nameField, addButton);
-
+        Debug.log("[Type Session class]: Remove listener " + EditingTable.lastTable);
+        if (EditingTable.getListener(EditingTable.lastTable) != null) {
+            table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));
+        }
+        table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("type_session"));
     }
 
     public String getName() {

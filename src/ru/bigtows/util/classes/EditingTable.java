@@ -1,5 +1,7 @@
 package ru.bigtows.util.classes;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 
@@ -8,10 +10,108 @@ import javafx.scene.control.TextField;
  */
 public class EditingTable extends TableCell<Country, String> {
 
+    public static String lastTable;
     private TextField textField;
 
     public static String selectedTable = null;
     public static String selectedIDTable = null;
+
+    static ChangeListener<Country> countryEdit = new ChangeListener<Country>() {
+        @Override
+        public void changed(
+                ObservableValue<? extends Country> observable,
+                Country oldValue,
+                Country newValue
+        ) {
+            if (newValue == null) {
+                EditingTable.selectedTable = null;
+                return;
+            }
+            EditingTable.selectedTable = "country";
+            EditingTable.selectedIDTable = newValue.getId();
+        }
+    };
+    static ChangeListener<TypeSession> typeSessionEdit = new ChangeListener<TypeSession>() {
+        @Override
+        public void changed(
+                ObservableValue<? extends TypeSession> observable,
+                TypeSession oldValue,
+                TypeSession newValue
+        ) {
+            if (newValue == null) {
+                EditingTable.selectedTable = null;
+                return;
+            }
+            EditingTable.selectedTable = "type_session";
+            EditingTable.selectedIDTable = newValue.getId();
+        }
+
+    };
+    static ChangeListener<Film> filmEdit = new ChangeListener<Film>() {
+        @Override
+        public void changed(
+                ObservableValue<? extends Film> observable,
+                Film oldValue,
+                Film newValue
+        ) {
+            if (newValue == null) {
+                EditingTable.selectedTable = null;
+                return;
+            }
+            EditingTable.selectedTable = "film";
+            EditingTable.selectedIDTable = newValue.getId();
+        }
+    };
+    static ChangeListener<Session> sessionEdit = new ChangeListener<Session>() {
+        @Override
+        public void changed(
+                ObservableValue<? extends Session> observable,
+                Session oldValue,
+                Session newValue
+        ) {
+            if (newValue == null) {
+                EditingTable.selectedTable = null;
+                return;
+            }
+            EditingTable.selectedTable = "session";
+            EditingTable.selectedIDTable = newValue.getId();
+        }
+    };
+    static ChangeListener<Cinema> cinemaEdit = new ChangeListener<Cinema>() {
+        @Override
+        public void changed(
+                ObservableValue<? extends Cinema> observable,
+                Cinema oldValue,
+                Cinema newValue
+        ) {
+            if (newValue == null) {
+                EditingTable.selectedTable = null;
+                return;
+            }
+            EditingTable.selectedTable = "cinema";
+            EditingTable.selectedIDTable = newValue.getId();
+        }
+    };
+
+
+    public static ChangeListener<?> getListener(String nameTable) {
+        if (nameTable == null) return null;
+        switch (nameTable.toLowerCase()) {
+            case "cinema":
+                return cinemaEdit;
+            case "country":
+                return countryEdit;
+            case "session":
+                return sessionEdit;
+            case "film":
+                return filmEdit;
+            case "type_session":
+                return typeSessionEdit;
+            default:
+                return null;
+        }
+    }
+
 
     public EditingTable() {
 

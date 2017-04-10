@@ -13,6 +13,7 @@ import ru.bigtows.Main;
 import ru.bigtows.forms.controllers.MenuController;
 import ru.bigtows.util.Columns;
 import ru.bigtows.util.DataBase;
+import ru.bigtows.util.Debug;
 
 import java.sql.SQLException;
 
@@ -67,6 +68,13 @@ public class Cinema {
         });
         table.getColumns().addAll(id, name, address);
         table.setItems(dbConnector.getCinemaTable());
+        Debug.log("[Cinema class]: Remove listener " + EditingTable.lastTable);
+        if (EditingTable.getListener(EditingTable.lastTable) != null) {
+            table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));
+        }
+
+
+        table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("cinema"));
 
         /**
          * Add Buttons for input

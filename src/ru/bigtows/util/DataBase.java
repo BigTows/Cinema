@@ -146,7 +146,6 @@ public class DataBase {
     }
 
     public void updateCountry(Country country, String oldID) {
-        Debug.log("sd");
         try {
             String sql = "call updateCountry(" + country.getId() +
                     ",'" + country.getName() + "'," + oldID + ")";
@@ -254,6 +253,50 @@ public class DataBase {
     public void removeFilm(String id) {
         try {
             this.connect.createStatement().executeQuery("call removeFilm(" + id + ")");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    public void removeCinema(String id) {
+        try {
+            this.connect.createStatement().executeQuery("call removeCinema(" + id + ")");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    public void removeSession(String id) {
+        try {
+            this.connect.createStatement().executeQuery("call removeSession(" + id + ")");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    public void removeTypeSession(String id) {
+        try {
+            this.connect.createStatement().executeQuery("call removeTypeSession(" + id + ")");
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error code: " + e.getErrorCode());
+            alert.setContentText(e.getMessage());
+            alert.show();
+        }
+    }
+
+    public void removeCountry(String id) {
+        try {
+            this.connect.createStatement().executeQuery("call removeCountry(" + id + ")");
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Error code: " + e.getErrorCode());

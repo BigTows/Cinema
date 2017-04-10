@@ -1,8 +1,6 @@
 package ru.bigtows.util.classes;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -85,23 +83,11 @@ public class Film {
         });
 
         table.getColumns().addAll(id, name, duration, idCountry);
-        table.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Film>() {
-                    @Override
-                    public void changed(
-                            ObservableValue<? extends Film> observable,
-                            Film oldValue,
-                            Film newValue
-                    ) {
-                        if (newValue == null) {
-                            Debug.log("");
-                            return;
-                        }
-                        EditingTable.selectedTable = "film";
-                        EditingTable.selectedIDTable = newValue.getId();
-                    }
-                }
-        );
+        Debug.log("[Film class]: Remove listener " + EditingTable.lastTable);
+        if (EditingTable.getListener(EditingTable.lastTable) != null) {
+            table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));
+        }
+        table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("film"));
 
         table.setItems(dbConnector.getFilmTable());
         /**

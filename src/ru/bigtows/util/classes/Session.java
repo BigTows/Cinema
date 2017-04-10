@@ -10,6 +10,7 @@ import ru.bigtows.Main;
 import ru.bigtows.forms.controllers.MenuController;
 import ru.bigtows.util.Columns;
 import ru.bigtows.util.DataBase;
+import ru.bigtows.util.Debug;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -162,6 +163,14 @@ public class Session {
         });
         hb.getChildren().addAll(idRField, filmComboBox, typeSessionComboBox, cinemaComboBox, datePicker,
                 hourComboBox, minuteComboBox, addButton);
+
+        Debug.log("[Session class]: Remove listener " + EditingTable.lastTable);
+        if (EditingTable.getListener(EditingTable.lastTable) != null) {
+            table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));
+        }
+
+
+        table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("session"));
     }
 
     public String getIdR() {

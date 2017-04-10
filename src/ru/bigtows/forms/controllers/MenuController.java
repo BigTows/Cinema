@@ -36,6 +36,7 @@ public class MenuController {
 
     @FXML
     private HBox hb;
+
     @FXML
     public void initialize() {
 
@@ -49,8 +50,26 @@ public class MenuController {
                     switch (EditingTable.selectedTable.toLowerCase()) {
                         case "film":
                             Main.db.removeFilm(EditingTable.selectedIDTable);
+
+                            break;
+                        case "cinema":
+                            Main.db.removeCinema(EditingTable.selectedIDTable);
+
+                            break;
+                        case "session":
+                            Main.db.removeSession(EditingTable.selectedIDTable);
+
+                            break;
+                        case "type_session":
+                            Main.db.removeTypeSession(EditingTable.selectedIDTable);
+
+                            break;
+                        case "country":
+                            Main.db.removeCountry(EditingTable.selectedIDTable);
+
+                            break;
                     }
-                    fillTable("film", table, hb);
+                    fillTable(EditingTable.selectedTable.toLowerCase(), table, hb);
                     EditingTable.selectedTable = null;
                 }
             }
@@ -67,6 +86,7 @@ public class MenuController {
 
     @FXML
     private void Test(MouseEvent event) {
+        if (listtables.getFocusModel().getFocusedItem() == null) return;
         fillTable(listtables.getFocusModel().getFocusedItem().toString(), table, hb);
     }
 
@@ -77,6 +97,7 @@ public class MenuController {
             case "country": {
                 try {
                     fillCountry(table, hb);
+                    EditingTable.lastTable = nameTable;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -86,6 +107,7 @@ public class MenuController {
 
                 try {
                     fillFilm(table, hb);
+                    EditingTable.lastTable = nameTable;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -94,6 +116,7 @@ public class MenuController {
             case "cinema": {
                 try {
                     fillCinema(table, hb);
+                    EditingTable.lastTable = nameTable;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -102,6 +125,7 @@ public class MenuController {
             case "type_session": {
                 try {
                     fillTypeSession(table, hb);
+                    EditingTable.lastTable = nameTable;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -110,6 +134,7 @@ public class MenuController {
             case "session": {
                 try {
                     fillSession(table, hb);
+                    EditingTable.lastTable = nameTable;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
