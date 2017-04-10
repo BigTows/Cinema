@@ -38,12 +38,12 @@ public class Session {
 
     public static void fillSession(TableView table, HBox hb) throws SQLException {
         DataBase dbConnector = Main.db;
-        TableColumn id = Columns.getColumn("Номер сеанса", new PropertyValueFactory<Film, String>("id"));
-        TableColumn idR = Columns.getColumn("Номер зала", new PropertyValueFactory<Film, String>("idR"));
-        TableColumn idF = Columns.getColumn("Номер фильма", new PropertyValueFactory<Film, String>("idF"));
-        TableColumn idT = Columns.getColumn("Номер типа", new PropertyValueFactory<Film, String>("idT"));
-        TableColumn idC = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Film, String>("idT"));
-        TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Film, String>("date"));
+        TableColumn id = Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"));
+        TableColumn idR = Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"));
+        TableColumn idF = Columns.getColumn("Номер фильма", new PropertyValueFactory<Session, String>("idF"));
+        TableColumn idT = Columns.getColumn("Номер типа", new PropertyValueFactory<Session, String>("idT"));
+        TableColumn idC = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Session, String>("idС"));
+        TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Session, String>("date"));
         id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Session, String> t) {
@@ -143,8 +143,8 @@ public class Session {
         hourComboBox.setPromptText("Часы");
         ComboBox minuteComboBox = new ComboBox();
         minuteComboBox.setPromptText("Минуты");
-        for (int i = 1; i <= 60; i++) {
-            if (i <= 24) hourComboBox.getItems().addAll(i);
+        for (int i = 1; i <= 59; i++) {
+            if (i <= 23) hourComboBox.getItems().addAll(i);
             minuteComboBox.getItems().addAll(i);
         }
 

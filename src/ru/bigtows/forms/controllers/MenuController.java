@@ -3,15 +3,19 @@ package ru.bigtows.forms.controllers;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import ru.bigtows.Main;
+import ru.bigtows.forms.Form;
 import ru.bigtows.util.Debug;
 import ru.bigtows.util.classes.EditingTable;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static ru.bigtows.util.classes.Cinema.fillCinema;
@@ -38,8 +42,20 @@ public class MenuController {
     private HBox hb;
 
     @FXML
-    public void initialize() {
+    private MenuItem adminSubMenu;
 
+    @FXML
+    public void initialize() {
+        adminSubMenu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Admin.fxml")), 650, 400));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         deleteSubMenu.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {

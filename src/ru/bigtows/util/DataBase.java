@@ -87,7 +87,8 @@ public class DataBase {
             dataTable = this.connect.createStatement().executeQuery("call getSession");
             while (dataTable.next()) {
                 Session session = new Session(dataTable.getString(1),
-                        dataTable.getString(2), dataTable.getString(3),
+                        dataTable.getString(2),
+                        dataTable.getString(3),
                         dataTable.getString(4),
                         dataTable.getString(5),
                         dataTable.getString(6));
@@ -173,7 +174,7 @@ public class DataBase {
 
     public void updateFilm(Film rowValue, String id) {
         try {
-            String sqlQuery = "call updateFilm(" + rowValue.getId() + "," + rowValue.getIdC()
+            String sqlQuery = "call updateFilm('" + rowValue.getId() + "'," + rowValue.getIdC()
                     + ",'" + rowValue.getName() + "'," + rowValue.getDuration() + "," + id + ")";
             Debug.log(sqlQuery);
             this.connect.createStatement().executeQuery(sqlQuery);
