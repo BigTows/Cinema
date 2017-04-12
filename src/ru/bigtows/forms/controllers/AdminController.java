@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -22,39 +23,18 @@ public class AdminController {
     @FXML
     private TabPane tabPane;
 
+    private Tab addTab;
+
     @FXML
     public void initialize() {
-        Tab tab = new Tab("+");
-        HBox hb = new HBox();
-        TextField userName = new TextField();
-        TextField password = new TextField();
-        ComboBox comboBox = new ComboBox();
-        Button btn = new Button("Добавить");
         try {
             fillTabPane();
-            ResultSet roles = Main.db.getRoles();
-            while (roles.next()) {
-                comboBox.getItems().addAll(roles.getString(1));
-            }
+            addTab = paneAdd();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Debug.log("[AdminPanel]: add user " + userName.getText());
-                if (Main.db.addUser(userName.getText(), password.getText(), comboBox.getSelectionModel().getSelectedItem().toString()))
-                    addUser(userName.getText());
-            }
-        });
-        hb.getChildren().add(userName);
-        hb.getChildren().add(password);
-        hb.getChildren().add(comboBox);
-        hb.getChildren().add(btn);
-        tab.setContent(hb);
-
-        tabPane.getTabs().add(tab);
+        tabPane.getTabs().add(addTab);
 
     }
 
@@ -65,14 +45,21 @@ public class AdminController {
         }
     }
 
+    /**
+     * add Tab with information about user
+     *
+     * @param name
+     */
     public void addUser(String name) {
         Tab tab = new Tab(name);
         HBox hb = new HBox();
+        hb.setPadding(new Insets(15, 12, 15, 12));
+        hb.setSpacing(20);
         ResultSet grants = Main.db.getGrants(name);
-        StringBuilder grantsText = new StringBuilder();
+        StringBuilder grantsText = new StringBuilder("Группа: ");
         try {
             while (grants.next()) {
-                grantsText.append(grants.getString(1) + " ");
+                grantsText.append(grants.getString(1) + ", ");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,8 +74,11 @@ public class AdminController {
             @Override
             public void handle(ActionEvent event) {
                 Debug.log("[AdminPanel]: remove user " + name);
-                if (Main.db.removeUser(name))
+                if (Main.db.removeUser(name)) {
                     tabPane.getTabs().remove(tab);
+                    tabPane.getTabs().remove(addTab);
+                    tabPane.getTabs().add(addTab);
+                }
             }
         });
         hb.getChildren().add(btn);
@@ -104,5 +94,33 @@ public class AdminController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Tab paneAdd() throws SQLException {
+        Tab tab = new Tab("+");
+        HBox hb = new HBox();
+        TextField userName = new TextField();
+        TextField password = new TextField();
+        ComboBox comboBox = new ComboBox();
+        ResultSet roles = Main.db.getRoles();
+        while (roles.next()) {
+            comboBox.getItems().addAll(roles.getString(1));
+        }
+        Button btn = new Button("Добавить");
+        btn.setOnAction(event -> {
+            Debug.log("[AdminPanel]: add user " + userName.getText());
+            if (Main.db.addUser(userName.getText(), password.getText(), comboBox.getSelectionModel().getSelectedItem().toString())) {
+                addUser(userName.getText());
+                tabPane.getTabs().remove(addTab);
+                tabPane.getTabs().add(addTab);
+            }
+        });
+        hb.getChildren().add(userName);
+        hb.getChildren().add(password);
+        hb.getChildren().add(comboBox);
+        hb.getChildren().add(btn);
+        tab.setContent(hb);
+
+        return tab;
     }
 }

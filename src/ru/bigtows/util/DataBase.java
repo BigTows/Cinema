@@ -313,7 +313,7 @@ public class DataBase {
 
     public ResultSet getUsers() {
         try {
-            return this.connect.createStatement().executeQuery("SELECT DISTINCT User FROM mysql.user WHERE LENGTH(HOST)>0 AND LENGTH(User)>0");
+            return this.connect.createStatement().executeQuery("SELECT DISTINCT User FROM mysql.user WHERE is_role='N' AND LENGTH(User)>0");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -330,7 +330,7 @@ public class DataBase {
 
     public ResultSet getRoles() {
         try {
-            return this.connect.createStatement().executeQuery("SELECT User FROM mysql.user WHERE LENGTH(Host)=0");
+            return this.connect.createStatement().executeQuery("SELECT User FROM mysql.user WHERE is_role='Y'");
         } catch (SQLException e) {
             return null;
         }
