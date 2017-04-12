@@ -40,8 +40,8 @@ public class AdminController {
             @Override
             public void handle(ActionEvent event) {
                 Debug.log("[AdminPanel]: add user " + userName.getText());
-                Main.db.addUser(userName.getText(), password.getText(), comboBox.getSelectionModel().getSelectedItem().toString());
-                addUser(userName.getText());
+                if (Main.db.addUser(userName.getText(), password.getText(), comboBox.getSelectionModel().getSelectedItem().toString()))
+                    addUser(userName.getText());
             }
         });
         hb.getChildren().add(userName);
@@ -83,8 +83,8 @@ public class AdminController {
             @Override
             public void handle(ActionEvent event) {
                 Debug.log("[AdminPanel]: remove user " + name);
-                Main.db.removeUser(name);
-                tabPane.getTabs().remove(tab);
+                if (Main.db.removeUser(name))
+                    tabPane.getTabs().remove(tab);
             }
         });
         hb.getChildren().add(btn);

@@ -331,21 +331,24 @@ public class DataBase {
         }
     }
 
-    public void removeUser(String user) {
+    public boolean removeUser(String user) {
         try {
             this.connect.createStatement().executeQuery("DROP USER IF EXISTS " + user + "@localhost");
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void addUser(String user, String password, String role) {
+    public boolean addUser(String user, String password, String role) {
         try {
-
             this.connect.createStatement().executeQuery("CREATE USER '" + user + "'@'localhost' IDENTIFIED BY '" + password + "'");
             this.connect.createStatement().executeQuery("GRANT " + role + " TO " + user + "@localhost");
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }
