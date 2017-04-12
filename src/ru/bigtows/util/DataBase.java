@@ -305,4 +305,47 @@ public class DataBase {
             alert.show();
         }
     }
+
+    public ResultSet getUsers() {
+        try {
+            return this.connect.createStatement().executeQuery("SELECT DISTINCT User FROM mysql.user WHERE LENGTH(HOST)>0 AND LENGTH(User)>0");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ResultSet getGrants(String user) {
+        try {
+            return this.connect.createStatement().executeQuery("SELECT Role FROM mysql.roles_mapping WHERE User LIKE '" + user + "%'");
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public ResultSet getRoles() {
+        try {
+            return this.connect.createStatement().executeQuery("SELECT ROLE_NAME FROM INFORMATION_SCHEMA.APPLICABLE_ROLES");
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public void removeUser(String user) {
+        try {
+            this.connect.createStatement().executeQuery("DROP USER IF EXISTS " + user + "@localhost");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addUser(String user, String password, String role) {
+        try {
+
+            this.connect.createStatement().executeQuery("CREATE USER '" + user + "'@'localhost' IDENTIFIED BY '" + password + "'");
+            this.connect.createStatement().executeQuery("GRANT " + role + " TO " + user + "@localhost");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -33,10 +33,11 @@ DROP TABLE IF EXISTS `Cinema`;
 CREATE TABLE `Cinema` (
   `number_cinema` INT(11)      NOT NULL AUTO_INCREMENT,
   `name`          VARCHAR(50)  NOT NULL,
-  `address`       VARCHAR(256) NOT NULL CHECK (LENGTH(address > 10)),
+  `address`       VARCHAR(256) NOT NULL,
   PRIMARY KEY (`number_cinema`)
 )
   ENGINE = InnoDB
+  AUTO_INCREMENT = 3
   DEFAULT CHARSET = utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -47,6 +48,7 @@ CREATE TABLE `Cinema` (
 LOCK TABLES `Cinema` WRITE;
 /*!40000 ALTER TABLE `Cinema`
   DISABLE KEYS */;
+INSERT INTO `Cinema` VALUES (1, '2', '2'), (2, '', '1');
 /*!40000 ALTER TABLE `Cinema`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -65,6 +67,7 @@ CREATE TABLE `Country` (
   UNIQUE KEY `name` (`name`)
 )
   ENGINE = InnoDB
+  AUTO_INCREMENT = 2
   DEFAULT CHARSET = utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -75,6 +78,7 @@ CREATE TABLE `Country` (
 LOCK TABLES `Country` WRITE;
 /*!40000 ALTER TABLE `Country`
   DISABLE KEYS */;
+INSERT INTO `Country` VALUES ('Россия', 1);
 /*!40000 ALTER TABLE `Country`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -168,6 +172,7 @@ CREATE TABLE `Type_Session` (
   UNIQUE KEY `name` (`name`)
 )
   ENGINE = InnoDB
+  AUTO_INCREMENT = 6
   DEFAULT CHARSET = utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -178,6 +183,7 @@ CREATE TABLE `Type_Session` (
 LOCK TABLES `Type_Session` WRITE;
 /*!40000 ALTER TABLE `Type_Session`
   DISABLE KEYS */;
+INSERT INTO `Type_Session` VALUES (5, '3D'), (1, 'IMAX');
 /*!40000 ALTER TABLE `Type_Session`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -659,4 +665,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
 
--- Dump completed on 2017-03-29 16:23:27
+-- Dump completed on 2017-04-12 13:56:15
