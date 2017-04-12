@@ -17,7 +17,7 @@ public class Form extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource(this.fileForm));
-        Scene scene = new Scene(root, 500, 300);
+        Scene scene = new Scene(root, 500, 150);
         stage.setScene(scene);
         stage.show();
         this.stage = stage;

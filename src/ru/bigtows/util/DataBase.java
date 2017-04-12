@@ -34,6 +34,11 @@ public class DataBase {
         }
     }
 
+    public void destroy() {
+        this.connect = null;
+        this.status = false;
+    }
+
     public boolean getStatus() {
         return this.status;
     }
@@ -325,7 +330,7 @@ public class DataBase {
 
     public ResultSet getRoles() {
         try {
-            return this.connect.createStatement().executeQuery("SELECT ROLE_NAME FROM INFORMATION_SCHEMA.APPLICABLE_ROLES");
+            return this.connect.createStatement().executeQuery("SELECT User FROM mysql.user WHERE LENGTH(Host)=0");
         } catch (SQLException e) {
             return null;
         }
@@ -344,7 +349,9 @@ public class DataBase {
     public boolean addUser(String user, String password, String role) {
         try {
             this.connect.createStatement().executeQuery("CREATE USER '" + user + "'@'localhost' IDENTIFIED BY '" + password + "'");
-            this.connect.createStatement().executeQuery("GRANT " + role + " TO " + user + "@localhost");
+            this.connect.createStatement().executeQuery("GRANT " + role + " TO " + user + "@'localhost'");
+            Debug.log("GRANT " + role + " TO " + user + "@'localhost'");
+            this.connect.createStatement().executeQuery("SET DEFAULT ROLE " + role + " FOR " + user + "@localhost");
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

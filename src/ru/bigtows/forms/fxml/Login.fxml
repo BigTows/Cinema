@@ -5,8 +5,8 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="142.0"
-            prefWidth="462.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="144.0"
+            prefWidth="529.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.bigtows.forms.controllers.LoginController">
     <bottom>
         <HBox alignment="CENTER_LEFT" prefHeight="62.0" prefWidth="580.0" spacing="20.0" BorderPane.alignment="CENTER">
@@ -33,7 +33,7 @@
                 <Insets left="10.0"/>
             </padding>
             <BorderPane.margin>
-                <Insets left="10.0" top="50.0"/>
+                <Insets left="10.0"/>
             </BorderPane.margin>
         </TextField>
     </left>

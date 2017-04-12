@@ -45,17 +45,10 @@ public class MenuController {
     private MenuItem adminSubMenu;
 
     @FXML
+    private MenuItem logout;
+
+    @FXML
     public void initialize() {
-        adminSubMenu.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Admin.fxml")), 650, 400));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
         deleteSubMenu.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -106,6 +99,7 @@ public class MenuController {
         fillTable(listtables.getFocusModel().getFocusedItem().toString(), table, hb);
     }
 
+
     public static void fillTable(String nameTable, TableView table, HBox hb) {
         table.getColumns().clear();
         hb.getChildren().clear();
@@ -155,6 +149,25 @@ public class MenuController {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+
+    @FXML
+    public void onClickLogoutItem(ActionEvent actionEvent) {
+        Main.db.destroy();
+        try {
+            Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Login.fxml")), 500, 300));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onClickAdminItem(ActionEvent actionEvent) {
+        try {
+            Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Admin.fxml")), 650, 400));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

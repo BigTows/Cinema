@@ -3,11 +3,15 @@ package ru.bigtows.forms.controllers;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import ru.bigtows.Main;
+import ru.bigtows.forms.Form;
 import ru.bigtows.util.Debug;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -94,4 +98,11 @@ public class AdminController {
     }
 
 
+    public void onExitFromAdminPanel(ActionEvent actionEvent) {
+        try {
+            Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Menu.fxml")), 650, 400));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TabPane?>
-<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-         prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1"
-         xmlns="http://javafx.com/javafx/8.0.111" fx:controller="ru.bigtows.forms.controllers.AdminController"/>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.bigtows.forms.controllers.AdminController">
+    <bottom>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="DataBase">
+                    <items>
+                        <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#onExitFromAdminPanel" text="Выйти"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </bottom>
+    <center>
+        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE"
+                 BorderPane.alignment="CENTER"/>
+    </center>
+</BorderPane>
