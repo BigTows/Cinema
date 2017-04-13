@@ -115,7 +115,7 @@ public class DataBase {
                     data.add(cinema);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                alertError(e);
             }
         }
         return data;
@@ -133,7 +133,7 @@ public class DataBase {
                     data.add(typeSession);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                alertError(e);
             }
         }
         return data;
@@ -144,10 +144,7 @@ public class DataBase {
         try {
             this.connect.createStatement().executeQuery("call addCountry('" + name + "')");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -159,19 +156,19 @@ public class DataBase {
             this.connect.createStatement().executeQuery(sql);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            alertError(e);
         }
     }
 
 
     public void updateSession(Session rowValue, String oldId) {
         try {
-            String sqlQuery = "call updateSession(" + rowValue.getId() + "," + rowValue.getIdR()
-                    + "," + rowValue.getIdT() + "," + rowValue.getIdF() + ",'" + rowValue.getDate() + "'," + rowValue.getIdC() + "," + oldId + ")";
+            String sqlQuery = "call updateSession(" + rowValue.getIdC() + "," + rowValue.getIdR()
+                    + "," + rowValue.getIdT() + "," + rowValue.getIdF() + ",'" + rowValue.getDate() + "'," + rowValue.getId() + "," + oldId + ")";
             Debug.log(sqlQuery);
             this.connect.createStatement().executeQuery(sqlQuery);
         } catch (SQLException e) {
-            e.printStackTrace();
+            alertError(e);
         }
     }
 
@@ -184,7 +181,7 @@ public class DataBase {
             Debug.log(sqlQuery);
             this.connect.createStatement().executeQuery(sqlQuery);
         } catch (SQLException e) {
-            e.printStackTrace();
+            alertError(e);
         }
     }
 
@@ -195,7 +192,7 @@ public class DataBase {
             Debug.log(sqlQuery);
             this.connect.createStatement().executeQuery(sqlQuery);
         } catch (SQLException e) {
-            e.printStackTrace();
+            alertError(e);
         }
     }
 
@@ -204,10 +201,7 @@ public class DataBase {
         try {
             this.connect.createStatement().executeQuery("call addCinema('" + name + "','" + address + "')");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -216,10 +210,7 @@ public class DataBase {
             this.connect.createStatement().executeQuery("call addFilm('" + name + "'," + duration +
                     "," + country + ")");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -230,7 +221,7 @@ public class DataBase {
             Debug.log(sqlQuery);
             this.connect.createStatement().executeQuery(sqlQuery);
         } catch (SQLException e) {
-            e.printStackTrace();
+            alertError(e);
         }
     }
 
@@ -238,10 +229,7 @@ public class DataBase {
         try {
             this.connect.createStatement().executeQuery("call addTypeSession('" + name + "')");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -249,10 +237,7 @@ public class DataBase {
         try {
             this.connect.createStatement().executeQuery("call addSession(" + idT + "," + idC + "," + idF + ",'" + date + "'," + idR + ")");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -260,10 +245,7 @@ public class DataBase {
         try {
             this.connect.createStatement().executeQuery("call removeFilm(" + id + ")");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -271,10 +253,7 @@ public class DataBase {
         try {
             this.connect.createStatement().executeQuery("call removeCinema(" + id + ")");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -282,10 +261,7 @@ public class DataBase {
         try {
             this.connect.createStatement().executeQuery("call removeSession(" + id + ")");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -293,10 +269,7 @@ public class DataBase {
         try {
             this.connect.createStatement().executeQuery("call removeTypeSession(" + id + ")");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -304,10 +277,7 @@ public class DataBase {
         try {
             this.connect.createStatement().executeQuery("call removeCountry(" + id + ")");
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error code: " + e.getErrorCode());
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alertError(e);
         }
     }
 
@@ -315,16 +285,26 @@ public class DataBase {
         try {
             return this.connect.createStatement().executeQuery("SELECT DISTINCT User FROM mysql.user WHERE is_role='N' AND LENGTH(User)>0");
         } catch (SQLException e) {
-            e.printStackTrace();
+            alertError(e);
+            return null;
         }
-        return null;
     }
 
     public ResultSet getGrants(String user) {
         try {
             return this.connect.createStatement().executeQuery("SELECT Role FROM mysql.roles_mapping WHERE User LIKE '" + user + "%'");
         } catch (SQLException e) {
+            alertError(e);
             return null;
+        }
+    }
+
+    public boolean isAdmin() {
+        try {
+            this.connect.createStatement().executeQuery("SELECT User FROM mysql.user WHERE is_role='Y'");
+            return true;
+        } catch (SQLException e) {
+            return false;
         }
     }
 
@@ -332,6 +312,7 @@ public class DataBase {
         try {
             return this.connect.createStatement().executeQuery("SELECT User FROM mysql.user WHERE is_role='Y'");
         } catch (SQLException e) {
+            alertError(e);
             return null;
         }
     }
@@ -357,5 +338,12 @@ public class DataBase {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private void alertError(SQLException e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error code: " + e.getErrorCode());
+        alert.setContentText(e.getMessage());
+        alert.show();
     }
 }

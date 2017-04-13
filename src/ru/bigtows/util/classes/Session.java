@@ -42,7 +42,7 @@ public class Session {
         TableColumn idR = Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"));
         TableColumn idF = Columns.getColumn("Номер фильма", new PropertyValueFactory<Session, String>("idF"));
         TableColumn idT = Columns.getColumn("Номер типа", new PropertyValueFactory<Session, String>("idT"));
-        TableColumn idC = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Session, String>("idС"));
+        TableColumn idC = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Session, String>("idC"));
         TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Session, String>("date"));
         id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
@@ -103,6 +103,7 @@ public class Session {
             }
         });
 
+        date.setMinWidth(170);
         table.getColumns().addAll(id, idC, idF, idR, idT, date);
         table.setItems(dbConnector.getSessionTable());
 
@@ -202,23 +203,23 @@ public class Session {
         this.id.set(id);
     }
 
-    public void setIdR(String id) {
+    private void setIdR(String id) {
         this.idR.set(id);
     }
 
-    public void setIdC(String id) {
+    private void setIdC(String id) {
         this.idC.set(id);
     }
 
-    public void setIdF(String id) {
+    private void setIdF(String id) {
         this.idF.set(id);
     }
 
-    public void setIdT(String id) {
+    private void setIdT(String id) {
         this.idT.set(id);
     }
 
-    public void setDate(String date) {
+    private void setDate(String date) {
         this.date.set(date);
     }
 }

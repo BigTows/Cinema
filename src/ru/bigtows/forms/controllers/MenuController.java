@@ -1,10 +1,10 @@
 package ru.bigtows.forms.controllers;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
@@ -49,40 +49,6 @@ public class MenuController {
 
     @FXML
     public void initialize() {
-        deleteSubMenu.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                if (EditingTable.selectedTable == null) {
-                    //@TODO add Alert
-                    Debug.log("First select row");
-                } else {
-                    switch (EditingTable.selectedTable.toLowerCase()) {
-                        case "film":
-                            Main.db.removeFilm(EditingTable.selectedIDTable);
-
-                            break;
-                        case "cinema":
-                            Main.db.removeCinema(EditingTable.selectedIDTable);
-
-                            break;
-                        case "session":
-                            Main.db.removeSession(EditingTable.selectedIDTable);
-
-                            break;
-                        case "type_session":
-                            Main.db.removeTypeSession(EditingTable.selectedIDTable);
-
-                            break;
-                        case "country":
-                            Main.db.removeCountry(EditingTable.selectedIDTable);
-
-                            break;
-                    }
-                    fillTable(EditingTable.selectedTable.toLowerCase(), table, hb);
-                    EditingTable.selectedTable = null;
-                }
-            }
-        });
 
         try {
             listtables.setItems(Main.db.getTables());
@@ -164,10 +130,52 @@ public class MenuController {
     }
 
     public void onClickAdminItem(ActionEvent actionEvent) {
-        try {
-            Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Admin.fxml")), 650, 400));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (Main.db.isAdmin()) {
+            try {
+                Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Admin.fxml")), 650, 400));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Нет прав!");
+            alert.setContentText("У вас нет прав для доступа к AdminPanel.");
+            alert.show();
         }
     }
+
+    public void onCkickDeleteItem(ActionEvent actionEvent) {
+        if (EditingTable.selectedTable == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Сначало выделите запись!");
+            alert.setContentText("Для того чтобы удалить запись, вам нужно сначало выделить (нажать) на запись, которую требуется удалить.");
+            alert.show();
+        } else {
+            switch (EditingTable.selectedTable.toLowerCase()) {
+                case "film":
+                    Main.db.removeFilm(EditingTable.selectedIDTable);
+
+                    break;
+                case "cinema":
+                    Main.db.removeCinema(EditingTable.selectedIDTable);
+
+                    break;
+                case "session":
+                    Main.db.removeSession(EditingTable.selectedIDTable);
+
+                    break;
+                case "type_session":
+                    Main.db.removeTypeSession(EditingTable.selectedIDTable);
+
+                    break;
+                case "country":
+                    Main.db.removeCountry(EditingTable.selectedIDTable);
+
+                    break;
+            }
+            fillTable(EditingTable.selectedTable.toLowerCase(), table, hb);
+            EditingTable.selectedTable = null;
+        }
+    }
+
 }

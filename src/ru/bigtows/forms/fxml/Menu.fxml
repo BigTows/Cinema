@@ -16,7 +16,8 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Изменения">
                     <items>
-                        <MenuItem fx:id="deleteSubMenu" mnemonicParsing="false" text="Удалить"/>
+                        <MenuItem fx:id="deleteSubMenu" mnemonicParsing="false" onAction="#onCkickDeleteItem"
+                                  text="Удалить"/>
                     </items>
                 </Menu>
             </menus>
