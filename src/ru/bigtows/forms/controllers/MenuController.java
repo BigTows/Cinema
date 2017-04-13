@@ -121,9 +121,9 @@ public class MenuController {
 
     @FXML
     public void onClickLogoutItem(ActionEvent actionEvent) {
-        Main.db.destroy();
         try {
             Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Login.fxml")), 500, 300));
+            Main.db.destroy();
         } catch (IOException e) {
             e.printStackTrace();
         }

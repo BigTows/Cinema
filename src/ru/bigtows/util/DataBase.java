@@ -248,8 +248,8 @@ public class DataBase {
         try {
             PreparedStatement film = this.connect.prepareStatement("call addFilm(?,?,?)");
             film.setString(1, name);
-            film.setString(1, duration);
-            film.setString(1, country);
+            film.setString(2, duration);
+            film.setString(3, country);
             film.executeQuery();
             Debug.log("[DataBase]: Add film " + name);
         } catch (SQLException e) {
@@ -422,6 +422,13 @@ public class DataBase {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Error code: " + e.getErrorCode());
         alert.setContentText(e.getMessage());
+        alert.show();
+    }
+
+    private void alertInfo(String shortMessage, String fullMessage) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(shortMessage);
+        alert.setContentText(fullMessage);
         alert.show();
     }
 }
