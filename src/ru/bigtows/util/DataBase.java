@@ -9,10 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import ru.bigtows.util.classes.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DataBase {
 
@@ -140,46 +137,51 @@ public class DataBase {
     }
 
 
-    public void addCountry(String name) {
-        try {
-            this.connect.createStatement().executeQuery("call addCountry('" + name + "')");
-        } catch (SQLException e) {
-            alertError(e);
-        }
-    }
-
     public void updateCountry(Country country, String oldID) {
         try {
-            String sql = "call updateCountry(" + country.getId() +
-                    ",'" + country.getName() + "'," + oldID + ")";
-            Debug.log(sql);
-            this.connect.createStatement().executeQuery(sql);
-
+            String querySQL = "call updateCountry(?,?,?)";
+            PreparedStatement updCountry = this.connect.prepareStatement(querySQL);
+            updCountry.setString(1, country.getId());
+            updCountry.setString(2, country.getName());
+            updCountry.setString(3, oldID);
+            updCountry.executeUpdate();
+            Debug.log("[DataBase]: Update country" + country.getName());
         } catch (SQLException e) {
             alertError(e);
         }
     }
 
 
-    public void updateSession(Session rowValue, String oldId) {
+    public void updateSession(Session session, String oldId) {
         try {
-            String sqlQuery = "call updateSession(" + rowValue.getIdC() + "," + rowValue.getIdR()
-                    + "," + rowValue.getIdT() + "," + rowValue.getIdF() + ",'" + rowValue.getDate() + "'," + rowValue.getId() + "," + oldId + ")";
-            Debug.log(sqlQuery);
-            this.connect.createStatement().executeQuery(sqlQuery);
+            String querySQL = "call updateSession(?,?,?,?,?,?,?)";
+            PreparedStatement updCountry = this.connect.prepareStatement(querySQL);
+            updCountry.setString(1, session.getIdC());
+            updCountry.setString(2, session.getIdR());
+            updCountry.setString(3, session.getIdT());
+            updCountry.setString(4, session.getIdF());
+            updCountry.setString(5, session.getDate());
+            updCountry.setString(6, session.getId());
+            updCountry.setString(7, oldId);
+            updCountry.executeUpdate();
+            Debug.log("[DataBase]: Update session " + session.getId());
+
         } catch (SQLException e) {
             alertError(e);
         }
     }
-
 
 
     public void updateFilm(Film rowValue, String id) {
         try {
-            String sqlQuery = "call updateFilm('" + rowValue.getId() + "'," + rowValue.getIdC()
-                    + ",'" + rowValue.getName() + "'," + rowValue.getDuration() + "," + id + ")";
-            Debug.log(sqlQuery);
-            this.connect.createStatement().executeQuery(sqlQuery);
+            PreparedStatement film = this.connect.prepareStatement("call updateFilm(?,?,?,?,?)");
+            film.setString(1, rowValue.getId());
+            film.setString(2, rowValue.getIdC());
+            film.setString(3, rowValue.getName());
+            film.setString(4, rowValue.getDuration());
+            film.setString(5, id);
+            film.executeUpdate();
+            Debug.log("[DataBase]: Update film " + rowValue.getName());
         } catch (SQLException e) {
             alertError(e);
         }
@@ -189,8 +191,27 @@ public class DataBase {
         try {
             String sqlQuery = "call updateCinema(" + rowValue.getId() + ",'" + rowValue.getName() +
                     "','" + rowValue.getAddress() + "'," + id + ")";
-            Debug.log(sqlQuery);
+            PreparedStatement cinema = this.connect.prepareStatement("call updateCinema(?,?,?,?)");
+            cinema.setString(1, rowValue.getId());
+            cinema.setString(2, rowValue.getName());
+            cinema.setString(3, rowValue.getAddress());
+            cinema.setString(4, id);
+            cinema.executeUpdate();
+            Debug.log("[DataBase]: Update cinema " + rowValue.getName());
             this.connect.createStatement().executeQuery(sqlQuery);
+        } catch (SQLException e) {
+            alertError(e);
+        }
+    }
+
+    public void updateTypeSession(TypeSession rowValue, String id) {
+        try {
+            PreparedStatement typeSession = this.connect.prepareStatement("call updateTypeSession(?,?,?)");
+            typeSession.setString(1, rowValue.getId());
+            typeSession.setString(2, rowValue.getName());
+            typeSession.setString(3, id);
+            typeSession.executeQuery();
+            Debug.log("[DataBase]: Update type session " + id);
         } catch (SQLException e) {
             alertError(e);
         }
@@ -199,27 +220,38 @@ public class DataBase {
 
     public void addCinema(String name, String address) {
         try {
-            this.connect.createStatement().executeQuery("call addCinema('" + name + "','" + address + "')");
+            PreparedStatement cinema = this.connect.prepareStatement("call addCinema(?,?)");
+            cinema.setString(1, name);
+            cinema.setString(2, address);
+            cinema.executeQuery();
+            Debug.log("[DataBase]: Add cinema " + name);
         } catch (SQLException e) {
             alertError(e);
         }
+    }
+
+    public void addCountry(String name) {
+        try {
+            String querySQL = "call addCountry(?)";
+            PreparedStatement addCountry = this.connect.prepareStatement(querySQL);
+            addCountry.setString(1, name);
+            addCountry.executeQuery();
+            Debug.log("[DataBase]: Add new country " + name);
+        } catch (SQLException e) {
+            alertError(e);
+        }
+
+
     }
 
     public void addFilm(String name, String duration, String country) {
         try {
-            this.connect.createStatement().executeQuery("call addFilm('" + name + "'," + duration +
-                    "," + country + ")");
-        } catch (SQLException e) {
-            alertError(e);
-        }
-    }
-
-    public void updateTypeSession(TypeSession rowValue, String id) {
-        try {
-            String sqlQuery = "call updateTypeSession(" + rowValue.getId() + ",'" + rowValue.getName() +
-                    "'," + id + ")";
-            Debug.log(sqlQuery);
-            this.connect.createStatement().executeQuery(sqlQuery);
+            PreparedStatement film = this.connect.prepareStatement("call addFilm(?,?,?)");
+            film.setString(1, name);
+            film.setString(2, duration);
+            film.setString(3, country);
+            film.executeQuery();
+            Debug.log("[DataBase]: Add film " + name);
         } catch (SQLException e) {
             alertError(e);
         }
@@ -227,7 +259,10 @@ public class DataBase {
 
     public void addTypeSession(String name) {
         try {
-            this.connect.createStatement().executeQuery("call addTypeSession('" + name + "')");
+            PreparedStatement typeSession = this.connect.prepareStatement("call addTypeSession(?)");
+            typeSession.setString(1, name);
+            typeSession.executeQuery();
+            Debug.log("[DataBase]: Add type session " + name);
         } catch (SQLException e) {
             alertError(e);
         }
@@ -235,7 +270,14 @@ public class DataBase {
 
     public void addSession(String idR, String idF, String idT, String idC, String date) {
         try {
-            this.connect.createStatement().executeQuery("call addSession(" + idT + "," + idC + "," + idF + ",'" + date + "'," + idR + ")");
+            PreparedStatement session = this.connect.prepareStatement("call addSession(?,?,?,?,?)");
+            session.setString(1, idT);
+            session.setString(2, idC);
+            session.setString(3, idF);
+            session.setString(4, date);
+            session.setString(5, idR);
+            session.executeQuery();
+            Debug.log("[DataBase]: Add new session");
         } catch (SQLException e) {
             alertError(e);
         }
@@ -243,7 +285,10 @@ public class DataBase {
 
     public void removeFilm(String id) {
         try {
-            this.connect.createStatement().executeQuery("call removeFilm(" + id + ")");
+            PreparedStatement film = this.connect.prepareStatement("call removeFilm(?)");
+            film.setString(1, id);
+            film.executeQuery();
+            Debug.log("[DataBase]: Remove film " + id);
         } catch (SQLException e) {
             alertError(e);
         }
@@ -251,7 +296,10 @@ public class DataBase {
 
     public void removeCinema(String id) {
         try {
-            this.connect.createStatement().executeQuery("call removeCinema(" + id + ")");
+            PreparedStatement cinema = this.connect.prepareStatement("call removeCinema(?)");
+            cinema.setString(1, id);
+            cinema.executeQuery();
+            Debug.log("[DataBase]: Remove cinema " + id);
         } catch (SQLException e) {
             alertError(e);
         }
@@ -259,7 +307,10 @@ public class DataBase {
 
     public void removeSession(String id) {
         try {
-            this.connect.createStatement().executeQuery("call removeSession(" + id + ")");
+            PreparedStatement session = this.connect.prepareStatement("call removeSession(?)");
+            session.setString(1, id);
+            session.executeQuery();
+            Debug.log("[DataBase]: Remove session " + id);
         } catch (SQLException e) {
             alertError(e);
         }
@@ -267,7 +318,10 @@ public class DataBase {
 
     public void removeTypeSession(String id) {
         try {
-            this.connect.createStatement().executeQuery("call removeTypeSession(" + id + ")");
+            PreparedStatement typeSession = this.connect.prepareStatement("call removeTypeSession(?)");
+            typeSession.setString(1, id);
+            typeSession.executeQuery();
+            Debug.log("[DataBase]: Remove type session " + id);
         } catch (SQLException e) {
             alertError(e);
         }
@@ -275,7 +329,10 @@ public class DataBase {
 
     public void removeCountry(String id) {
         try {
-            this.connect.createStatement().executeQuery("call removeCountry(" + id + ")");
+            PreparedStatement country = this.connect.prepareStatement("call removeCountry(?)");
+            country.setString(1, id);
+            country.executeQuery();
+            Debug.log("[DataBase]: Remove country " + id);
         } catch (SQLException e) {
             alertError(e);
         }
@@ -290,9 +347,12 @@ public class DataBase {
         }
     }
 
-    public ResultSet getGrants(String user) {
+    public ResultSet getGrants(String userName) {
         try {
-            return this.connect.createStatement().executeQuery("SELECT Role FROM mysql.roles_mapping WHERE User LIKE '" + user + "%'");
+            String querySQL = "SELECT ROLE FROM mysql.roles_mapping WHERE USER LIKE ?";
+            PreparedStatement user = this.connect.prepareStatement(querySQL);
+            user.setString(1, userName + "%");
+            return user.executeQuery();
         } catch (SQLException e) {
             alertError(e);
             return null;
@@ -317,25 +377,43 @@ public class DataBase {
         }
     }
 
-    public boolean removeUser(String user) {
+    public boolean removeUser(String userName) {
         try {
-            this.connect.createStatement().executeQuery("DROP USER IF EXISTS " + user + "@localhost");
+            String querySQL = "DROP USER IF EXISTS ?@localhost";
+            PreparedStatement user = this.connect.prepareStatement(querySQL);
+            user.setString(1, userName);
+            user.executeQuery();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            alertError(e);
             return false;
         }
     }
 
-    public boolean addUser(String user, String password, String role) {
+    public boolean addUser(String userName, String password, String role) {
         try {
-            this.connect.createStatement().executeQuery("CREATE USER '" + user + "'@'localhost' IDENTIFIED BY '" + password + "'");
-            this.connect.createStatement().executeQuery("GRANT " + role + " TO " + user + "@'localhost'");
-            Debug.log("GRANT " + role + " TO " + user + "@'localhost'");
-            this.connect.createStatement().executeQuery("SET DEFAULT ROLE " + role + " FOR " + user + "@localhost");
+            String querySQL = "CREATE USER ?@localhost IDENTIFIED BY ?";
+            PreparedStatement user = this.connect.prepareStatement(querySQL);
+            user.setString(1, userName);
+            user.setString(2, password);
+            user.executeQuery();
+
+            querySQL = "GRANT ? TO ?@localhost";
+            user = this.connect.prepareStatement(querySQL);
+            user.setString(1, role);
+            user.setString(2, userName);
+            user.executeQuery();
+
+            querySQL = "SET DEFAULT ROLE ? FOR ?@localhost";
+            user = this.connect.prepareStatement(querySQL);
+            user.setString(1, role);
+            user.setString(2, userName);
+            user.executeQuery();
+
+            Debug.log("[AdminPanel]: Create user " + userName + " and add role " + role);
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            alertError(e);
             return false;
         }
     }
@@ -344,6 +422,13 @@ public class DataBase {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Error code: " + e.getErrorCode());
         alert.setContentText(e.getMessage());
+        alert.show();
+    }
+
+    private void alertInfo(String shortMessage, String fullMessage) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(shortMessage);
+        alert.setContentText(fullMessage);
         alert.show();
     }
 }
