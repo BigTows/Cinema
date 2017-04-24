@@ -1,6 +1,7 @@
 package ru.bigtows.forms.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +12,7 @@ import javafx.scene.layout.HBox;
 import ru.bigtows.Main;
 import ru.bigtows.forms.Form;
 import ru.bigtows.util.Debug;
+import ru.bigtows.util.classes.Log;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -24,6 +26,9 @@ public class AdminController {
     private TabPane tabPane;
 
     private Tab addTab;
+
+    @FXML
+    private TableView TableLogs;
 
     @FXML
     public void initialize() {
@@ -122,5 +127,17 @@ public class AdminController {
         tab.setContent(hb);
 
         return tab;
+    }
+
+    public void onCreateBackup(ActionEvent actionEvent) {
+
+    }
+
+    public void onShowLogs(Event event) {
+        try {
+            Log.fillLog(TableLogs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

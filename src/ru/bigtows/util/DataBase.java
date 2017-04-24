@@ -68,6 +68,23 @@ public class DataBase {
         return data;
     }
 
+    public ObservableList<Log> getLogs() throws SQLException {
+        ObservableList<Log> data = FXCollections.observableArrayList();
+        if (this.status) {
+            ResultSet dataTable = this.connect.createStatement().executeQuery("SELECT * FROM Logs");
+
+            while (dataTable.next()) {
+                Log log = new Log(dataTable.getString(1),
+                        dataTable.getString(2),
+                        dataTable.getString(3),
+                        dataTable.getString(4)
+                );
+                data.add(log);
+            }
+        }
+        return data;
+    }
+
     public ObservableList<Film> getFilmTable() throws SQLException {
         ObservableList<Film> data = FXCollections.observableArrayList();
         if (this.status) {
