@@ -34,6 +34,9 @@ public class Log {
         TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Log, String>("date"));
         TableColumn user = Columns.getColumn("Пользователь", new PropertyValueFactory<Log, String>("user"));
         TableColumn message = Columns.getColumn("Сообщение", new PropertyValueFactory<Log, String>("message"));
+        date.setMinWidth(180);
+        user.setMinWidth(150);
+        message.setMinWidth(320);
         table.getColumns().addAll(id, date, user, message);
         table.setItems(dbConnector.getLogs());
     }

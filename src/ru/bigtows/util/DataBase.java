@@ -45,7 +45,9 @@ public class DataBase {
         if (this.status) {
             ResultSet rs = this.connect.createStatement().executeQuery("SHOW TABLES");
             while (rs.next()) {
-                items.add(rs.getString(1));
+                //@TODO Costil'
+                if (!rs.getString(1).equalsIgnoreCase("logs"))
+                    items.add(rs.getString(1));
             }
         } else {
             Debug.log("[DataBase]: Please reconnect");
