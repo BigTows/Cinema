@@ -31,8 +31,14 @@ public class TypeSession {
         this.name = new SimpleStringProperty(name);
     }
 
-
-    public static void fillTypeSession(TableView table, HBox hb) throws SQLException {
+    /**
+     * Fill Table view from table in DataBase Type_Session
+     *
+     * @param table
+     * @param hBox
+     * @throws SQLException
+     */
+    public static void fillTypeSession(TableView table, HBox hBox) throws SQLException {
         DataBase dbConnector = Main.db;
         TableColumn id = Columns.getColumn("Номер типа сессии", new PropertyValueFactory<Film, String>("id"));
         TableColumn name = Columns.getColumn("Название сессии", new PropertyValueFactory<Film, String>("name"));
@@ -66,10 +72,10 @@ public class TypeSession {
             @Override
             public void handle(ActionEvent e) {
                 dbConnector.addTypeSession(nameField.getText());
-                MenuController.fillTable("type_session", table, hb);
+                MenuController.fillTable("type_session", table, hBox);
             }
         });
-        hb.getChildren().addAll(nameField, addButton);
+        hBox.getChildren().addAll(nameField, addButton);
         Debug.log("[Type Session class]: Remove listener " + EditingTable.lastTable);
         if (EditingTable.getListener(EditingTable.lastTable) != null) {
             table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));

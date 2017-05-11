@@ -26,24 +26,28 @@ public class Session {
     private final SimpleStringProperty idT;
     private final SimpleStringProperty idC;
     private final SimpleStringProperty date;
+    private final SimpleStringProperty nameFilm;
+    private final SimpleStringProperty nameCinema;
 
 
-    public Session(String id, String idR, String idF, String idC, String idT, String date) {
+    public Session(String id, String idR, String idF, String idC, String idT, String date, String nameFilm, String nameCinema) {
         this.id = new SimpleStringProperty(id);
         this.idR = new SimpleStringProperty(idR);
         this.idF = new SimpleStringProperty(idF);
+        this.nameFilm = new SimpleStringProperty(nameFilm);
         this.idT = new SimpleStringProperty(idT);
         this.date = new SimpleStringProperty(date);
         this.idC = new SimpleStringProperty(idC);
+        this.nameCinema = new SimpleStringProperty(nameCinema);
     }
 
     public static void fillSession(TableView table, HBox hb) throws SQLException {
         DataBase dbConnector = Main.db;
         TableColumn id = Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"));
         TableColumn idR = Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"));
-        TableColumn idF = Columns.getColumn("Номер фильма", new PropertyValueFactory<Session, String>("idF"));
+        TableColumn nameF = Columns.getColumn("Название фильма", new PropertyValueFactory<Session, String>("nameFilm"));
         TableColumn idT = Columns.getColumn("Номер типа", new PropertyValueFactory<Session, String>("idT"));
-        TableColumn idC = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Session, String>("idC"));
+        TableColumn nameCinema = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Session, String>("nameCinema"));
         TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Session, String>("date"));
         id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
@@ -65,7 +69,7 @@ public class Session {
             }
         });
 
-        idF.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+        nameF.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Session, String> t) {
                 t.getTableView().getItems().get(
@@ -85,7 +89,7 @@ public class Session {
             }
         });
 
-        idC.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+        nameCinema.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Session, String> t) {
                 t.getTableView().getItems().get(
@@ -105,7 +109,7 @@ public class Session {
         });
 
         date.setMinWidth(170);
-        table.getColumns().addAll(id, idC, idF, idR, idT, date);
+        table.getColumns().addAll(id, nameCinema, nameF, idR, idT, date);
         table.setItems(dbConnector.getSessionTable());
 
         final TextField idRField = new TextField();
@@ -135,8 +139,8 @@ public class Session {
         cinemaComboBox.setPromptText("Кинотеатры");
         HashMap<String, String> cinemaMap = new HashMap<>();
         Main.db.getCinemaTable().forEach((tab) -> {
-            cinemaMap.put(tab.getName(), tab.getId());
-            cinemaComboBox.getItems().addAll(tab.getName());
+            cinemaMap.put(tab.getNameCinema(), tab.getIdCinema());
+            cinemaComboBox.getItems().addAll(tab.getNameCinema());
         });
 
         DatePicker datePicker = new DatePicker();
@@ -183,6 +187,9 @@ public class Session {
         return idF.get();
     }
 
+    public String getNameCinema() {
+        return nameCinema.get();
+    }
 
     public String getIdT() {
         return idT.get();
@@ -200,6 +207,17 @@ public class Session {
         return id.get();
     }
 
+    public String getNameFilm() {
+        return this.nameFilm.get();
+    }
+
+    public void setNameFilm(String name) {
+        this.nameFilm.set(name);
+    }
+
+    public void setNameCinema(String name) {
+        this.nameCinema.set(name);
+    }
     public void setId(String id) {
         this.id.set(id);
     }

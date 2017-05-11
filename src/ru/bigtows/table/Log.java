@@ -15,14 +15,14 @@ import java.sql.SQLException;
  * Created by bigtows.
  */
 public class Log {
-    private final SimpleStringProperty id;
+    private final SimpleStringProperty idLog;
     private final SimpleStringProperty date;
     private final SimpleStringProperty user;
     private final SimpleStringProperty message;
 
 
-    public Log(String id, String date, String user, String message) {
-        this.id = new SimpleStringProperty(id);
+    public Log(String idLog, String date, String user, String message) {
+        this.idLog = new SimpleStringProperty(idLog);
         this.date = new SimpleStringProperty(date);
         this.user = new SimpleStringProperty(user);
         this.message = new SimpleStringProperty(message);
@@ -30,7 +30,7 @@ public class Log {
 
     public static void fillLog(TableView table) throws SQLException {
         DataBase dbConnector = Main.db;
-        TableColumn id = Columns.getColumn("Номер операции", new PropertyValueFactory<Log, String>("id"));
+        TableColumn id = Columns.getColumn("Номер операции", new PropertyValueFactory<Log, String>("idLog"));
         TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Log, String>("date"));
         TableColumn user = Columns.getColumn("Пользователь", new PropertyValueFactory<Log, String>("user"));
         TableColumn message = Columns.getColumn("Сообщение", new PropertyValueFactory<Log, String>("message"));
@@ -41,8 +41,8 @@ public class Log {
         table.setItems(dbConnector.getLogs());
     }
 
-    public String getId() {
-        return id.get();
+    public String getIdLog() {
+        return idLog.get();
     }
 
     public String getDate() {

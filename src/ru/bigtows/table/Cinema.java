@@ -1,10 +1,10 @@
 package ru.bigtows.table;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,52 +19,55 @@ import ru.bigtows.util.Debug;
 import java.sql.SQLException;
 
 /**
- * Created by bigtows on 29/03/2017.
+ * Cinema
+ * Created by bigtows
+ * GitHub - https://github.com/BigTows
+ * from 29/03/2017
  */
 public class Cinema {
-    private final SimpleStringProperty id;
-    private final SimpleStringProperty name;
-    private final SimpleStringProperty address;
+    private final SimpleStringProperty idCinema;
+    private final SimpleStringProperty nameCinema;
+    private final SimpleStringProperty addressCinema;
 
 
-    public Cinema(String id, String name, String address) {
-        this.id = new SimpleStringProperty(id);
-        this.name = new SimpleStringProperty(name);
-        this.address = new SimpleStringProperty(address);
+    public Cinema(String idCinema, String nameCinema, String addressCinema) {
+        this.idCinema = new SimpleStringProperty(idCinema);
+        this.nameCinema = new SimpleStringProperty(nameCinema);
+        this.addressCinema = new SimpleStringProperty(addressCinema);
     }
 
     public static void fillCinema(TableView table, HBox hb) throws SQLException {
         DataBase dbConnector = Main.db;
-        TableColumn id = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Cinema, String>("id"));
-        TableColumn name = Columns.getColumn("Название", new PropertyValueFactory<Cinema, String>("name"));
-        TableColumn address = Columns.getColumn("Адрес", new PropertyValueFactory<Cinema, String>("address"));
+        TableColumn id = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Cinema, String>("idCinema"));
+        TableColumn name = Columns.getColumn("Название", new PropertyValueFactory<Cinema, String>("nameCinema"));
+        TableColumn address = Columns.getColumn("Адрес", new PropertyValueFactory<Cinema, String>("addressCinema"));
 
-        id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Cinema, String>>() {
+        id.setOnEditCommit(new EventHandler<CellEditEvent<Cinema, String>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<Cinema, String> t) {
+            public void handle(CellEditEvent<Cinema, String> t) {
                 String oldId = t.getOldValue();
                 t.getTableView().getItems().get(
                         t.getTablePosition().getRow()
-                ).setId(t.getNewValue());
+                ).setIdCinema(t.getNewValue());
                 dbConnector.updateCinema(t.getRowValue(), oldId);
             }
         });
-        name.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Cinema, String>>() {
+        name.setOnEditCommit(new EventHandler<CellEditEvent<Cinema, String>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<Cinema, String> t) {
+            public void handle(CellEditEvent<Cinema, String> t) {
                 t.getTableView().getItems().get(
                         t.getTablePosition().getRow()
-                ).setName(t.getNewValue());
-                dbConnector.updateCinema(t.getRowValue(), t.getRowValue().getId());
+                ).setNameCinema(t.getNewValue());
+                dbConnector.updateCinema(t.getRowValue(), t.getRowValue().getIdCinema());
             }
         });
-        address.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Cinema, String>>() {
+        address.setOnEditCommit(new EventHandler<CellEditEvent<Cinema, String>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<Cinema, String> t) {
+            public void handle(CellEditEvent<Cinema, String> t) {
                 t.getTableView().getItems().get(
                         t.getTablePosition().getRow()
-                ).setAddress(t.getNewValue());
-                dbConnector.updateCinema(t.getRowValue(), t.getRowValue().getId());
+                ).setAddressCinema(t.getNewValue());
+                dbConnector.updateCinema(t.getRowValue(), t.getRowValue().getIdCinema());
             }
         });
         table.getColumns().addAll(name, address);
@@ -86,37 +89,34 @@ public class Cinema {
         addressField.setPromptText("Адрес");
 
         final Button addButton = new Button("Отправить");
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                dbConnector.addCinema(nameField.getText(), addressField.getText());
-                MenuController.fillTable("cinema", table, hb);
-            }
+        addButton.setOnAction(e -> {
+            dbConnector.addCinema(nameField.getText(), addressField.getText());
+            MenuController.fillTable("cinema", table, hb);
         });
         hb.getChildren().addAll(nameField, addressField, addButton);
     }
 
-    public String getName() {
-        return name.get();
+    public String getNameCinema() {
+        return nameCinema.get();
     }
 
-    public String getId() {
-        return id.get();
+    public String getIdCinema() {
+        return idCinema.get();
     }
 
-    public String getAddress() {
-        return address.get();
+    public String getAddressCinema() {
+        return addressCinema.get();
     }
 
-    public void setAddress(String address) {
-        this.address.set(address);
+    public void setAddressCinema(String addressCinema) {
+        this.addressCinema.set(addressCinema);
     }
 
-    public void setId(String id) {
-        this.id.set(id);
+    public void setIdCinema(String idCinema) {
+        this.idCinema.set(idCinema);
     }
 
-    public void setName(String name) {
-        this.name.set(name);
+    public void setNameCinema(String nameCinema) {
+        this.nameCinema.set(nameCinema);
     }
 }

@@ -32,8 +32,8 @@ DROP TABLE IF EXISTS `Cinema`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Cinema` (
   `number_cinema` INT(11)      NOT NULL AUTO_INCREMENT,
-  `name`          VARCHAR(50)  NOT NULL,
-  `address`       VARCHAR(256) NOT NULL,
+  `nameCinema`    VARCHAR(50)  NOT NULL,
+  `addressCinema` VARCHAR(256) NOT NULL,
   PRIMARY KEY (`number_cinema`)
 )
   ENGINE = InnoDB
@@ -69,7 +69,7 @@ FOR EACH ROW
     DECLARE message VARCHAR(300);
     SET message = (SELECT CONCAT("Added a new value Number cinema «", NEW.number_cinema));
     SET message = (SELECT CONCAT(message, "», Name: «"));
-    SET message = (SELECT CONCAT(message, NEW.name));
+    SET message = (SELECT CONCAT(message, NEW.nameCinema));
     SET message = (SELECT CONCAT(message, "», Address: «"));
     SET message = (SELECT CONCAT(message, NEW.Address));
     SET message = (SELECT CONCAT(message, "» in the table Cinema"));
@@ -97,7 +97,7 @@ FOR EACH ROW
     DECLARE message VARCHAR(300);
     SET message = (SELECT CONCAT("The following values were updated Number cinema «", NEW.number_cinema));
     SET message = (SELECT CONCAT(message, "», Name: «"));
-    SET message = (SELECT CONCAT(message, NEW.name));
+    SET message = (SELECT CONCAT(message, NEW.nameCinema));
     SET message = (SELECT CONCAT(message, "», Address: «"));
     SET message = (SELECT CONCAT(message, NEW.Address));
     SET message = (SELECT CONCAT(message, "» in the Cinema table"));
@@ -124,7 +124,7 @@ AFTER DELETE
 FOR EACH ROW
   BEGIN
     DECLARE message VARCHAR(300);
-    SET message = (SELECT CONCAT("A value «", OLD.name));
+    SET message = (SELECT CONCAT("A value «", OLD.nameCinema));
     SET message = (SELECT CONCAT(message, "»"));
     SET message = (SELECT CONCAT(message, " of the Cinema has been removed"));
     INSERT INTO logs (date, сontractor, message) VALUES (NOW(), SESSION_USER(), message);
@@ -144,10 +144,10 @@ DROP TABLE IF EXISTS `Country`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Country` (
-  `name`           VARCHAR(50) NOT NULL,
+  `nameCinema`     VARCHAR(50) NOT NULL,
   `number_country` INT(11)     NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`number_country`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `nameCinema` (`nameCinema`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 2
@@ -180,7 +180,7 @@ AFTER INSERT
 FOR EACH ROW
   BEGIN
     DECLARE message VARCHAR(300);
-    SET message = (SELECT CONCAT("Added a new value Name: «", NEW.name));
+    SET message = (SELECT CONCAT("Added a new value Name: «", NEW.nameCinema));
     SET message = (SELECT CONCAT(message, "», Number country: «"));
     SET message = (SELECT CONCAT(message, NEW.number_country));
     SET message = (SELECT CONCAT(message, "» to the table Country"));
@@ -206,7 +206,7 @@ AFTER UPDATE
 FOR EACH ROW
   BEGIN
     DECLARE message VARCHAR(300);
-    SET message = (SELECT CONCAT("The following values were updated Name: «", NEW.name));
+    SET message = (SELECT CONCAT("The following values were updated Name: «", NEW.nameCinema));
     SET message = (SELECT CONCAT(message, "», Number country: «"));
     SET message = (SELECT CONCAT(message, NEW.number_country));
     SET message = (SELECT CONCAT(message, "» to the Country table"));
@@ -233,7 +233,7 @@ AFTER DELETE
 FOR EACH ROW
   BEGIN
     DECLARE message VARCHAR(300);
-    SET message = (SELECT CONCAT("A value «", OLD.name));
+    SET message = (SELECT CONCAT("A value «", OLD.nameCinema));
     SET message = (SELECT CONCAT(message, "»"));
     SET message = (SELECT CONCAT(message, " of the Country has been removed"));
     INSERT INTO logs (date, сontractor, message) VALUES (NOW(), SESSION_USER(), message);
@@ -254,7 +254,7 @@ DROP TABLE IF EXISTS `Film`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Film` (
   `number_film`    INT(11)     NOT NULL AUTO_INCREMENT,
-  `name`           VARCHAR(50) NOT NULL,
+  `nameCinema`     VARCHAR(50) NOT NULL,
   `duration`       INT(11)     NOT NULL,
   `number_country` INT(11)              DEFAULT NULL,
   PRIMARY KEY (`number_film`),
@@ -296,7 +296,7 @@ FOR EACH ROW
     DECLARE message VARCHAR(300);
     SET message = (SELECT CONCAT("Added a new value Number film: «", NEW.number_film));
     SET message = (SELECT CONCAT(message, "», Name: «"));
-    SET message = (SELECT CONCAT(message, NEW.name));
+    SET message = (SELECT CONCAT(message, NEW.nameCinema));
     SET message = (SELECT CONCAT(message, "», Duration: «"));
     SET message = (SELECT CONCAT(message, NEW.duration));
     SET message = (SELECT CONCAT(message, "», Number country: «"));
@@ -326,7 +326,7 @@ FOR EACH ROW
     DECLARE message VARCHAR(300);
     SET message = (SELECT CONCAT("The following values were updated Number film: «", NEW.number_film));
     SET message = (SELECT CONCAT(message, "», Name: «"));
-    SET message = (SELECT CONCAT(message, NEW.name));
+    SET message = (SELECT CONCAT(message, NEW.nameCinema));
     SET message = (SELECT CONCAT(message, "», Duration: «"));
     SET message = (SELECT CONCAT(message, NEW.duration));
     SET message = (SELECT CONCAT(message, "», Number country: «"));
@@ -355,7 +355,7 @@ AFTER DELETE
 FOR EACH ROW
   BEGIN
     DECLARE message VARCHAR(300);
-    SET message = (SELECT CONCAT("A value «", OLD.name));
+    SET message = (SELECT CONCAT("A value «", OLD.nameCinema));
     SET message = (SELECT CONCAT(message, "»"));
     SET message = (SELECT CONCAT(message, " of the Film has been removed"));
     INSERT INTO logs (date, сontractor, message) VALUES (NOW(), SESSION_USER(), message);
@@ -515,9 +515,9 @@ DROP TABLE IF EXISTS `Type_Session`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Type_Session` (
   `number_type` INT(11)     NOT NULL AUTO_INCREMENT,
-  `name`        VARCHAR(50) NOT NULL,
+  `nameCinema`  VARCHAR(50) NOT NULL,
   PRIMARY KEY (`number_type`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `nameCinema` (`nameCinema`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 12
@@ -552,7 +552,7 @@ FOR EACH ROW
     DECLARE message VARCHAR(300);
     SET message = (SELECT CONCAT("Added a new value Number type", NEW.number_type));
     SET message = (SELECT CONCAT(message, "», Name: «"));
-    SET message = (SELECT CONCAT(message, NEW.name));
+    SET message = (SELECT CONCAT(message, NEW.nameCinema));
     SET message = (SELECT CONCAT(message, "» to the table Type_Session"));
     INSERT INTO logs (date, сontractor, message) VALUES (NOW(), SESSION_USER(), message);
   END */;;
@@ -578,7 +578,7 @@ FOR EACH ROW
     DECLARE message VARCHAR(300);
     SET message = (SELECT CONCAT("The following values were updated Number type", NEW.number_type));
     SET message = (SELECT CONCAT(message, "», Name: «"));
-    SET message = (SELECT CONCAT(message, NEW.name));
+    SET message = (SELECT CONCAT(message, NEW.nameCinema));
     SET message = (SELECT CONCAT(message, "» in the Type_Session table"));
     INSERT INTO logs (date, сontractor, message) VALUES (NOW(), SESSION_USER(), message);
 
@@ -603,7 +603,7 @@ AFTER DELETE
 FOR EACH ROW
   BEGIN
     DECLARE message VARCHAR(300);
-    SET message = (SELECT CONCAT("A value «", OLD.name));
+    SET message = (SELECT CONCAT("A value «", OLD.nameCinema));
     SET message = (SELECT CONCAT(message, "»"));
     SET message = (SELECT CONCAT(message, " of the Type_Session has been removed"));
     INSERT INTO logs (date, сontractor, message) VALUES (NOW(), SESSION_USER(), message);
@@ -623,11 +623,11 @@ DROP TABLE IF EXISTS `logs`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `logs` (
-  `id`         INT(11) NOT NULL AUTO_INCREMENT,
+  `idLog`      INT(11) NOT NULL AUTO_INCREMENT,
   `date`       DATETIME         DEFAULT NULL,
   `сontractor` VARCHAR(150)     DEFAULT NULL,
   `message`    VARCHAR(1024)    DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`idLog`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 45
@@ -707,7 +707,7 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `addCinema`(nC VARCHAR(20), Address
   SQL SECURITY INVOKER
   COMMENT 'Insert Cinema'
   BEGIN
-    INSERT Cinema (name, address) VALUES (Nc, Address);
+    INSERT Cinema (nameCinema, addressCinema) VALUES (Nc, Address);
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode = @saved_sql_mode */;
@@ -728,7 +728,7 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `addCountry`(nC VARCHAR(20))
   SQL SECURITY INVOKER
   COMMENT 'Insert Country'
   BEGIN
-    INSERT Country (name) VALUES (Nc);
+    INSERT Country (nameCinema) VALUES (Nc);
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode = @saved_sql_mode */;
@@ -749,7 +749,7 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `addFilm`(nF VARCHAR(20), Dur INT, 
   SQL SECURITY INVOKER
   COMMENT 'Insert Film'
   BEGIN
-    INSERT INTO Film (name, duration, number_country) VALUES (nF, Dur, nC);
+    INSERT INTO Film (nameCinema, duration, number_country) VALUES (nF, Dur, nC);
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode = @saved_sql_mode */;
@@ -791,7 +791,7 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `addTypeSession`(nTS VARCHAR(20))
   SQL SECURITY INVOKER
   COMMENT 'Insert Type_Session'
   BEGIN
-    INSERT INTO Type_Session (name) VALUES (nTS);
+    INSERT INTO Type_Session (nameCinema) VALUES (nTS);
   END ;;
 DELIMITER ;
 /*!50003 SET sql_mode = @saved_sql_mode */;
@@ -1055,7 +1055,7 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `updateCinema`(numC INT, nC VARCHAR
   COMMENT 'Update Cinema'
   BEGIN
     UPDATE Cinema
-    SET number_cinema = numC, name = nC, address = address
+    SET number_cinema = numC, nameCinema = nC, addressCinema = addressCinema
     WHERE number_cinema = oldNumC;
   END ;;
 DELIMITER ;
@@ -1078,7 +1078,7 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `updateCountry`(numC INT, nC VARCHA
   COMMENT 'Update Country'
   BEGIN
     UPDATE Country
-    SET number_country = numC, name = nC
+    SET number_country = numC, nameCinema = nC
     WHERE number_country = oldNumC;
   END ;;
 DELIMITER ;
@@ -1101,7 +1101,7 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `updateFilm`(numF INT, nC INT, nF V
   COMMENT 'Update Film'
   BEGIN
     UPDATE Film
-    SET number_film = numF, number_country = nC, name = nF, duration = Dur
+    SET number_film = numF, number_country = nC, nameCinema = nF, duration = Dur
     WHERE number_film = oldNumF;
   END ;;
 DELIMITER ;
@@ -1149,7 +1149,7 @@ CREATE DEFINER =`root`@`localhost` PROCEDURE `updateTypeSession`(numTS INT, nTS 
   COMMENT 'Update Type_Session'
   BEGIN
     UPDATE Type_Session
-    SET number_type = numTS, name = nTS
+    SET number_type = numTS, nameCinema = nTS
     WHERE number_type = oldNumTS;
   END ;;
 DELIMITER ;

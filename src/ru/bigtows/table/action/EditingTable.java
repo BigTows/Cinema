@@ -65,7 +65,7 @@ public class EditingTable extends TableCell<Country, String> {
             return;
         }
         EditingTable.selectedTable = "cinema";
-        EditingTable.selectedIDTable = newValue.getId();
+        EditingTable.selectedIDTable = newValue.getIdCinema();
     };
 
 
@@ -128,6 +128,48 @@ public class EditingTable extends TableCell<Country, String> {
                     commitEdit(countriesHash.get(result.get()));
                 } else {
                     cancelEdit();
+                }
+            } else if (selectedTable.equalsIgnoreCase("Session")) {
+                List<String> choices = new ArrayList<>();
+                HashMap<String, String> countriesHash = new HashMap<>();
+                if (getTableView().getColumns().indexOf(getTableColumn()) == 2) {
+                    try {
+                        ObservableList<Film> films = Main.db.getFilmTable();
+                        films.forEach(data -> {
+                            countriesHash.put(data.getName(), data.getId());
+                            choices.add(data.getName());
+                        });
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+                    dialog.setTitle("Выбор Фильма");
+                    dialog.setHeaderText("Пожалуйста выберите интересующую вам фильм");
+                    dialog.setContentText("Вырерите фильм:");
+                    Optional<String> result = dialog.showAndWait();
+                    if (result.isPresent()) {
+                        Debug.log(result.get());
+                        commitEdit(countriesHash.get(result.get()));
+                    } else {
+                        cancelEdit();
+                    }
+                } else if (getTableView().getColumns().indexOf(getTableColumn()) == 1) {
+                    ObservableList<Cinema> films = Main.db.getCinemaTable();
+                    films.forEach(data -> {
+                        countriesHash.put(data.getNameCinema(), data.getIdCinema());
+                        choices.add(data.getNameCinema());
+                    });
+                    ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+                    dialog.setTitle("Выбор Кинотеатра");
+                    dialog.setHeaderText("Пожалуйста выберите интересующую вас кинотеатр");
+                    dialog.setContentText("Вырерите кинотеатр:");
+                    Optional<String> result = dialog.showAndWait();
+                    if (result.isPresent()) {
+                        Debug.log(result.get());
+                        commitEdit(countriesHash.get(result.get()));
+                    } else {
+                        cancelEdit();
+                    }
                 }
             }
         }

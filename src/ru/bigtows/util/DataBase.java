@@ -1,7 +1,10 @@
 package ru.bigtows.util;
 
 /**
- * Created by bigtows on 19/03/2017.
+ * Cinema
+ * Created by bigtows
+ * GitHub - https://github.com/BigTows
+ * from 19/03/2017
  */
 
 import javafx.collections.FXCollections;
@@ -45,7 +48,6 @@ public class DataBase {
         if (this.status) {
             ResultSet rs = this.connect.createStatement().executeQuery("SHOW TABLES");
             while (rs.next()) {
-                //@TODO Costil'
                 if (!rs.getString(1).equalsIgnoreCase("logs"))
                     items.add(rs.getString(1));
             }
@@ -120,12 +122,35 @@ public class DataBase {
             ResultSet dataTable;
             dataTable = this.connect.createStatement().executeQuery("call getSession");
             while (dataTable.next()) {
+                ObservableList<Film> filmsTable = getFilmTable();
+                final String[] nameTable = {"", "", "", ""}; // Here Like Inner Join
+                filmsTable.forEach(dataFilms -> {
+                    try {
+                        if (dataFilms.getId().equalsIgnoreCase(dataTable.getString(3))) {
+                            nameTable[0] = dataFilms.getName();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
+                ObservableList<Cinema> cinemasTable = getCinemaTable();
+                cinemasTable.forEach(dataCinema -> {
+                    try {
+                        if (dataCinema.getIdCinema().equalsIgnoreCase(dataTable.getString(4))) {
+                            nameTable[1] = dataCinema.getNameCinema();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
                 Session session = new Session(dataTable.getString(1),
                         dataTable.getString(2),
                         dataTable.getString(3),
                         dataTable.getString(4),
                         dataTable.getString(5),
-                        dataTable.getString(6));
+                        dataTable.getString(6),
+                        nameTable[0],
+                        nameTable[1]);
                 data.add(session);
             }
         }
@@ -221,15 +246,15 @@ public class DataBase {
 
     public void updateCinema(Cinema rowValue, String id) {
         try {
-            String sqlQuery = "call updateCinema(" + rowValue.getId() + ",'" + rowValue.getName() +
-                    "','" + rowValue.getAddress() + "'," + id + ")";
+            String sqlQuery = "call updateCinema(" + rowValue.getIdCinema() + ",'" + rowValue.getNameCinema() +
+                    "','" + rowValue.getAddressCinema() + "'," + id + ")";
             PreparedStatement cinema = this.connect.prepareStatement("call updateCinema(?,?,?,?)");
-            cinema.setString(1, rowValue.getId());
-            cinema.setString(2, rowValue.getName());
-            cinema.setString(3, rowValue.getAddress());
+            cinema.setString(1, rowValue.getIdCinema());
+            cinema.setString(2, rowValue.getNameCinema());
+            cinema.setString(3, rowValue.getAddressCinema());
             cinema.setString(4, id);
             cinema.executeUpdate();
-            Debug.log("[DataBase]: Update cinema " + rowValue.getName());
+            Debug.log("[DataBase]: Update cinema " + rowValue.getNameCinema());
             this.connect.createStatement().executeQuery(sqlQuery);
         } catch (SQLException e) {
             alertError(e);

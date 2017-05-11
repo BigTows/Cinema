@@ -40,7 +40,7 @@ public class Film {
         TableColumn id = Columns.getColumn("Номер фильма", new PropertyValueFactory<Film, String>("id"));
         TableColumn name = Columns.getColumn("Название", new PropertyValueFactory<Film, String>("name"));
         TableColumn duration = Columns.getColumn("Длительность", new PropertyValueFactory<Film, String>("duration"));
-        TableColumn nameC = Columns.getColumn("Номер страны", new PropertyValueFactory<Film, String>("nameC"));
+        TableColumn nameC = Columns.getColumn("Название страны", new PropertyValueFactory<Film, String>("nameC"));
         /**
          * add Event edit
          */
