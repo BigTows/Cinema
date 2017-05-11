@@ -82,7 +82,7 @@ public class Film {
             }
         });
 
-        table.getColumns().addAll(id, name, duration, idCountry);
+        table.getColumns().addAll(name, duration, idCountry);
         Debug.log("[Film class]: Remove listener " + EditingTable.lastTable);
         if (EditingTable.getListener(EditingTable.lastTable) != null) {
             table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));

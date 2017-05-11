@@ -2,8 +2,18 @@ package ru.bigtows.util.classes;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
+import ru.bigtows.Main;
+import ru.bigtows.util.Debug;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by bigtows on 27/03/2017.
@@ -120,12 +130,44 @@ public class EditingTable extends TableCell<Country, String> {
     @Override
     public void startEdit() {
         if (!isEmpty()) {
+
             super.startEdit();
             createTextField();
             setText(null);
             setGraphic(textField);
             textField.selectAll();
+            /**
+             * @TODO Add to all Tables
+             * @TOD
+             *
+             */
+            if (selectedTable.equalsIgnoreCase("film") && getTableView().getColumns().indexOf(getTableColumn()) == 2) {
+                List<String> choices = new ArrayList<>();
+                HashMap<String, String> countriesHash = new HashMap<>();
+                try {
+                    ObservableList<Country> countries = Main.db.getCountryTable();
+                    countries.forEach(data -> {
+                        countriesHash.put(data.getName(), data.getId());
+                        choices.add(data.getName());
+                    });
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+                dialog.setTitle("Выбор страны");
+                dialog.setHeaderText("Пожалуйста выберите интересующую вами страну");
+                dialog.setContentText("Вырерите страну:");
+                Optional<String> result = dialog.showAndWait();
+                if (result.isPresent()) {
+                    Debug.log(result.get());
+                    commitEdit(countriesHash.get(result.get()));
+                } else {
+                    cancelEdit();
+                }
+            }
         }
+
+
     }
 
     @Override

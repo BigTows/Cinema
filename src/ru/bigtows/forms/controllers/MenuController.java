@@ -1,5 +1,6 @@
 package ru.bigtows.forms.controllers;
 
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,13 +50,24 @@ public class MenuController {
 
     @FXML
     public void initialize() {
-
+        /**
+         * Remove columns move
+         */
+        table.getColumns().addListener((ListChangeListener) change -> {
+            change.next();
+            if (change.wasReplaced()) {
+                fillTable(EditingTable.lastTable, table, hb);
+            }
+        });
         try {
+            /**
+             * fill list
+             */
             listtables.setItems(Main.db.getTables());
         } catch (SQLException e) {
             Debug.log("[Form Menu]: Update ListTables failed");
         }
-        table.setEditable(true);
+        table.setEditable(false);
     }
 
 

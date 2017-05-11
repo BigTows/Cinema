@@ -66,7 +66,7 @@ public class Country {
         /**
          * add Column to Table
          */
-        table.getColumns().addAll(name, id);
+        table.getColumns().addAll(name);
 
 
         table.setItems(dbConnector.getCountryTable());

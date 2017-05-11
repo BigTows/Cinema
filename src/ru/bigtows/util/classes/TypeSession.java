@@ -54,7 +54,7 @@ public class TypeSession {
                 dbConnector.updateTypeSession(t.getRowValue(), t.getRowValue().getId());
             }
         });
-        table.getColumns().addAll(name, id);
+        table.getColumns().addAll(name);
 
 
         table.setItems(dbConnector.getTypeSessionTable());

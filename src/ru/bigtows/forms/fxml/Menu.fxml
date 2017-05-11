@@ -35,7 +35,7 @@
         </ListView>
     </left>
     <center>
-        <TableView fx:id="table" editable="true" prefHeight="294.0" prefWidth="462.0" BorderPane.alignment="CENTER"/>
+        <TableView fx:id="table" prefHeight="294.0" prefWidth="462.0" BorderPane.alignment="CENTER"/>
     </center>
     <bottom>
         <HBox fx:id="hb" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="356.0" spacing="3.0"

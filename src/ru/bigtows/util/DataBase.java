@@ -366,6 +366,7 @@ public class DataBase {
         }
     }
 
+
     public ResultSet getGrants(String userName) {
         try {
             String querySQL = "SELECT ROLE FROM mysql.roles_mapping WHERE USER LIKE ?";

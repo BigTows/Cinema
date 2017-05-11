@@ -66,7 +66,7 @@ public class Cinema {
                 dbConnector.updateCinema(t.getRowValue(), t.getRowValue().getId());
             }
         });
-        table.getColumns().addAll(id, name, address);
+        table.getColumns().addAll(name, address);
         table.setItems(dbConnector.getCinemaTable());
         Debug.log("[Cinema class]: Remove listener " + EditingTable.lastTable);
         if (EditingTable.getListener(EditingTable.lastTable) != null) {
