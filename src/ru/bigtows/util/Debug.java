@@ -5,8 +5,7 @@ package ru.bigtows.util;
  */
 public class Debug {
     private static final boolean DEBUG_MODE = true;
-
-
+    
     public static void log(String message) {
         if (DEBUG_MODE) {
             System.out.println(message);
