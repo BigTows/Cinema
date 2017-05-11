@@ -67,7 +67,7 @@ public class MenuController {
         } catch (SQLException e) {
             Debug.log("[Form Menu]: Update ListTables failed");
         }
-        table.setEditable(false);
+        table.setEditable(true);
     }
 
 

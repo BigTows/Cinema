@@ -93,9 +93,22 @@ public class DataBase {
             ResultSet dataTable;
             dataTable = this.connect.createStatement().executeQuery("call getFilm");
             while (dataTable.next()) {
-                Film film = new Film(dataTable.getString(1),
-                        dataTable.getString(2), dataTable.getString(3), dataTable.getString(4));
-                data.add(film);
+
+                ObservableList<Country> countries = getCountryTable();
+                countries.forEach(countryData -> {
+                    try {
+                        if (countryData.getId().equalsIgnoreCase(dataTable.getString(4))) {
+                            Film film = new Film(dataTable.getString(1),
+                                    dataTable.getString(2),
+                                    dataTable.getString(3),
+                                    dataTable.getString(4),
+                                    countryData.getName());
+                            data.add(film);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }
         return data;

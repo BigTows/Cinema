@@ -104,7 +104,7 @@ public class EditingTable extends TableCell<Country, String> {
     };
 
 
-    public static ChangeListener<?> getListener(String nameTable) {
+    static ChangeListener<?> getListener(String nameTable) {
         if (nameTable == null) return null;
         switch (nameTable.toLowerCase()) {
             case "cinema":
@@ -173,7 +173,7 @@ public class EditingTable extends TableCell<Country, String> {
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-        setText((String) getItem());
+        setText(getItem());
         setGraphic(null);
     }
 

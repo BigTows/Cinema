@@ -24,13 +24,14 @@ public class Film {
     private final SimpleStringProperty name;
     private final SimpleStringProperty duration;
     private final SimpleStringProperty idC;
+    private final SimpleStringProperty nameC;
 
-
-    public Film(String id, String name, String duration, String id_country) {
+    public Film(String id, String name, String duration, String id_country, String name_country) {
         this.id = new SimpleStringProperty(id);
         this.name = new SimpleStringProperty(name);
         this.duration = new SimpleStringProperty(duration);
         this.idC = new SimpleStringProperty(id_country);
+        this.nameC = new SimpleStringProperty(name_country);
     }
 
     public static void fillFilm(TableView table, HBox hb) throws SQLException {
@@ -38,7 +39,7 @@ public class Film {
         TableColumn id = Columns.getColumn("Номер фильма", new PropertyValueFactory<Film, String>("id"));
         TableColumn name = Columns.getColumn("Название", new PropertyValueFactory<Film, String>("name"));
         TableColumn duration = Columns.getColumn("Длительность", new PropertyValueFactory<Film, String>("duration"));
-        TableColumn idCountry = Columns.getColumn("Номер страны", new PropertyValueFactory<Film, String>("idC"));
+        TableColumn nameC = Columns.getColumn("Номер страны", new PropertyValueFactory<Film, String>("nameC"));
         /**
          * add Event edit
          */
@@ -72,7 +73,7 @@ public class Film {
             }
         });
 
-        idCountry.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Film, String>>() {
+        nameC.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Film, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Film, String> t) {
                 t.getTableView().getItems().get(
@@ -82,7 +83,7 @@ public class Film {
             }
         });
 
-        table.getColumns().addAll(name, duration, idCountry);
+        table.getColumns().addAll(name, duration, nameC);
         Debug.log("[Film class]: Remove listener " + EditingTable.lastTable);
         if (EditingTable.getListener(EditingTable.lastTable) != null) {
             table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));
@@ -133,7 +134,14 @@ public class Film {
         return idC.get();
     }
 
+    public String getNameC() {
+        return nameC.get();
+    }
 
+
+    public void setNameC(String name) {
+        this.nameC.set(name);
+    }
     public void setDuration(String duration) {
         this.duration.set(duration);
     }
