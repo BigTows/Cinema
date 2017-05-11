@@ -1,4 +1,4 @@
-package ru.bigtows.util;
+package ru.bigtows.table.column;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.TableCell;
@@ -6,10 +6,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
-import ru.bigtows.util.classes.EditingTable;
+import ru.bigtows.table.action.EditingTable;
 
 /**
  * Created by bigtows on 29/03/2017.
+ *
  * @TODO CHANGE
  */
 public class Columns {

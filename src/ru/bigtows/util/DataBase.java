@@ -7,7 +7,7 @@ package ru.bigtows.util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import ru.bigtows.util.classes.*;
+import ru.bigtows.table.*;
 
 import java.sql.*;
 

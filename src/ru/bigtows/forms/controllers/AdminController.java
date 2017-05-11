@@ -11,8 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import ru.bigtows.Main;
 import ru.bigtows.forms.Form;
+import ru.bigtows.table.Log;
 import ru.bigtows.util.Debug;
-import ru.bigtows.util.classes.Log;
 
 import java.io.IOException;
 import java.sql.ResultSet;

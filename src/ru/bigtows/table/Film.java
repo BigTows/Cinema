@@ -1,4 +1,4 @@
-package ru.bigtows.util.classes;
+package ru.bigtows.table;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -9,7 +9,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import ru.bigtows.Main;
 import ru.bigtows.forms.controllers.MenuController;
-import ru.bigtows.util.Columns;
+import ru.bigtows.table.action.EditingTable;
+import ru.bigtows.table.column.Columns;
 import ru.bigtows.util.DataBase;
 import ru.bigtows.util.Debug;
 
@@ -142,6 +143,7 @@ public class Film {
     public void setNameC(String name) {
         this.nameC.set(name);
     }
+
     public void setDuration(String duration) {
         this.duration.set(duration);
     }

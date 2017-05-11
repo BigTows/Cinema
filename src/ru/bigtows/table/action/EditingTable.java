@@ -1,4 +1,4 @@
-package ru.bigtows.util.classes;
+package ru.bigtows.table.action;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
@@ -6,6 +6,7 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import ru.bigtows.Main;
+import ru.bigtows.table.*;
 import ru.bigtows.util.Debug;
 
 import java.sql.SQLException;
@@ -15,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by bigtows on 27/03/2017.
+ * Cinema
+ * Created by bigtows.
  */
 public class EditingTable extends TableCell<Country, String> {
 
@@ -67,7 +69,7 @@ public class EditingTable extends TableCell<Country, String> {
     };
 
 
-    static ChangeListener<?> getListener(String nameTable) {
+    public static ChangeListener<?> getListener(String nameTable) {
         if (nameTable == null) return null;
         switch (nameTable.toLowerCase()) {
             case "cinema":

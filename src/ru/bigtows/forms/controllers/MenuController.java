@@ -13,17 +13,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import ru.bigtows.Main;
 import ru.bigtows.forms.Form;
+import ru.bigtows.table.action.EditingTable;
 import ru.bigtows.util.Debug;
-import ru.bigtows.util.classes.EditingTable;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static ru.bigtows.util.classes.Cinema.fillCinema;
-import static ru.bigtows.util.classes.Country.fillCountry;
-import static ru.bigtows.util.classes.Film.fillFilm;
-import static ru.bigtows.util.classes.Session.fillSession;
-import static ru.bigtows.util.classes.TypeSession.fillTypeSession;
+import static ru.bigtows.table.Cinema.fillCinema;
+import static ru.bigtows.table.Country.fillCountry;
+import static ru.bigtows.table.Film.fillFilm;
+import static ru.bigtows.table.Session.fillSession;
+import static ru.bigtows.table.TypeSession.fillTypeSession;
 
 /**
  * Created by bigtows on 19/03/2017.

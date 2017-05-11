@@ -1,11 +1,11 @@
-package ru.bigtows.util.classes;
+package ru.bigtows.table;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ru.bigtows.Main;
-import ru.bigtows.util.Columns;
+import ru.bigtows.table.column.Columns;
 import ru.bigtows.util.DataBase;
 
 import java.sql.SQLException;
