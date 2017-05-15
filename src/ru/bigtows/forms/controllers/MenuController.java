@@ -32,54 +32,19 @@ public class MenuController {
 
 
     @FXML
-    private ListView listtables;
-    @FXML
     public TableView table;
-
-    @FXML
-    private MenuItem deleteSubMenu;
-
     @FXML
     public HBox hb;
-
+    @FXML
+    private ListView listtables;
+    @FXML
+    private MenuItem deleteSubMenu;
     @FXML
     private MenuItem adminSubMenu;
 
     @FXML
     private MenuItem logout;
 
-    @FXML
-    public void initialize() {
-        /**
-         * Remove columns move
-         */
-        table.getColumns().addListener((ListChangeListener) change -> {
-            change.next();
-            if (change.wasReplaced()) {
-                fillTable(EditingTable.lastTable, table, hb);
-            }
-        });
-        try {
-            /**
-             * fill list
-             */
-            listtables.setItems(Main.db.getTables());
-        } catch (SQLException e) {
-            Debug.log("[Form Menu]: Update ListTables failed");
-        }
-        table.setEditable(true);
-    }
-
-
-    @FXML
-    private void Test(MouseEvent event) {
-        if (listtables.getFocusModel().getFocusedItem() == null) return;
-        fillTable(listtables.getFocusModel().getFocusedItem().toString(), table, hb);
-    }
-
-    public void refreshTable(TableView table, HBox hb) {
-        fillTable(EditingTable.lastTable, table, hb);
-    }
 
     public static void fillTable(String nameTable, TableView table, HBox hb) {
         table.getColumns().clear();
@@ -131,6 +96,34 @@ public class MenuController {
                 }
             }
         }
+    }
+
+    @FXML
+    public void initialize() {
+        /**
+         * Remove columns move
+         */
+        table.getColumns().addListener((ListChangeListener) change -> {
+            change.next();
+            if (change.wasReplaced()) {
+                fillTable(EditingTable.lastTable, table, hb);
+            }
+        });
+        try {
+            /**
+             * fill list
+             */
+            listtables.setItems(Main.db.getTables());
+        } catch (SQLException e) {
+            Debug.log("[Form Menu]: Update ListTables failed");
+        }
+        table.setEditable(true);
+    }
+
+    @FXML
+    private void Test(MouseEvent event) {
+        if (listtables.getFocusModel().getFocusedItem() == null) return;
+        fillTable(listtables.getFocusModel().getFocusedItem().toString(), table, hb);
     }
 
 
@@ -191,10 +184,6 @@ public class MenuController {
             fillTable(EditingTable.selectedTable.toLowerCase(), table, hb);
             EditingTable.selectedTable = null;
         }
-    }
-
-    public MenuController() {
-
     }
 
 }

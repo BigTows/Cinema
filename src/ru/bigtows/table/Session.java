@@ -48,8 +48,8 @@ public class Session {
         TableColumn id = Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"));
         TableColumn idR = Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"));
         TableColumn nameF = Columns.getColumn("Название фильма", new PropertyValueFactory<Session, String>("nameFilm"));
-        TableColumn nameTypeSession = Columns.getColumn("Номер типа", new PropertyValueFactory<Session, String>("nameTypeSession"));
-        TableColumn nameCinema = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Session, String>("nameCinema"));
+        TableColumn nameTypeSession = Columns.getColumn("Название типа", new PropertyValueFactory<Session, String>("nameTypeSession"));
+        TableColumn nameCinema = Columns.getColumn("Название кинотеатра", new PropertyValueFactory<Session, String>("nameCinema"));
         TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Session, String>("date"));
         id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
@@ -267,32 +267,64 @@ public class Session {
         return idR.get();
     }
 
+    private void setIdR(String id) {
+        this.idR.set(id);
+    }
+
     public String getIdF() {
         return idF.get();
+    }
+
+    private void setIdF(String id) {
+        this.idF.set(id);
     }
 
     public String getNameCinema() {
         return nameCinema.get();
     }
 
+    public void setNameCinema(String name) {
+        this.nameCinema.set(name);
+    }
+
     public String getIdT() {
         return idT.get();
+    }
+
+    private void setIdT(String id) {
+        this.idT.set(id);
     }
 
     public String getIdC() {
         return idC.get();
     }
 
+    private void setIdC(String id) {
+        this.idC.set(id);
+    }
+
     public String getDate() {
         return date.get();
+    }
+
+    private void setDate(String date) {
+        this.date.set(date);
     }
 
     public String getId() {
         return id.get();
     }
 
+    public void setId(String id) {
+        this.id.set(id);
+    }
+
     public String getNameTypeSession() {
         return nameTypeSession.get();
+    }
+
+    public void setNameTypeSession(String name) {
+        this.nameTypeSession.set(name);
     }
 
     public String getNameFilm() {
@@ -301,37 +333,5 @@ public class Session {
 
     public void setNameFilm(String name) {
         this.nameFilm.set(name);
-    }
-
-    public void setNameCinema(String name) {
-        this.nameCinema.set(name);
-    }
-
-    public void setNameTypeSession(String name) {
-        this.nameTypeSession.set(name);
-    }
-
-    public void setId(String id) {
-        this.id.set(id);
-    }
-
-    private void setIdR(String id) {
-        this.idR.set(id);
-    }
-
-    private void setIdC(String id) {
-        this.idC.set(id);
-    }
-
-    private void setIdF(String id) {
-        this.idF.set(id);
-    }
-
-    private void setIdT(String id) {
-        this.idT.set(id);
-    }
-
-    private void setDate(String date) {
-        this.date.set(date);
     }
 }

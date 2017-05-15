@@ -23,11 +23,8 @@ import java.util.Optional;
 public class EditingTable extends TableCell<Country, String> {
 
     public static String lastTable;
-    private TextField textField;
-
     public static String selectedTable = null;
     public static String selectedIDTable = null;
-
     private static ChangeListener<Country> countryEdit = (observable, oldValue, newValue) -> {
         if (newValue == null) {
             EditingTable.selectedTable = null;
@@ -68,7 +65,12 @@ public class EditingTable extends TableCell<Country, String> {
         EditingTable.selectedTable = "cinema";
         EditingTable.selectedIDTable = newValue.getIdCinema();
     };
+    private TextField textField;
 
+
+    public EditingTable() {
+
+    }
 
     public static ChangeListener<?> getListener(String nameTable) {
         if (nameTable == null) return null;
@@ -86,11 +88,6 @@ public class EditingTable extends TableCell<Country, String> {
             default:
                 return null;
         }
-    }
-
-
-    public EditingTable() {
-
     }
 
     @Override
@@ -111,7 +108,6 @@ public class EditingTable extends TableCell<Country, String> {
             HashMap<String, String> countriesHash = new HashMap<>();
             if (selectedTable.equalsIgnoreCase("film") && getTableView().getColumns().indexOf(getTableColumn()) == 2) {
                 List<String> choices = new ArrayList<>();
-
                 try {
                     ObservableList<Country> countries = Main.db.getCountryTable();
                     countries.forEach(data -> {

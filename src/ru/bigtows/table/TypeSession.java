@@ -33,6 +33,7 @@ public class TypeSession {
 
     /**
      * Fill Table view from table in DataBase Type_Session
+     *
      * @param table
      * @param hBox
      * @throws SQLException
@@ -86,16 +87,15 @@ public class TypeSession {
         return name.get();
     }
 
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
     public String getId() {
         return id.get();
     }
 
-
     public void setId(String id) {
         this.id.set(id);
-    }
-
-    public void setName(String name) {
-        this.name.set(name);
     }
 }

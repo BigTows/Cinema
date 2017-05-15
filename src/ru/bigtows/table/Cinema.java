@@ -101,8 +101,16 @@ public class Cinema {
         return nameCinema.get();
     }
 
+    public void setNameCinema(String nameCinema) {
+        this.nameCinema.set(nameCinema);
+    }
+
     public String getIdCinema() {
         return idCinema.get();
+    }
+
+    public void setIdCinema(String idCinema) {
+        this.idCinema.set(idCinema);
     }
 
     public String getAddressCinema() {
@@ -111,13 +119,5 @@ public class Cinema {
 
     public void setAddressCinema(String addressCinema) {
         this.addressCinema.set(addressCinema);
-    }
-
-    public void setIdCinema(String idCinema) {
-        this.idCinema.set(idCinema);
-    }
-
-    public void setNameCinema(String nameCinema) {
-        this.nameCinema.set(nameCinema);
     }
 }

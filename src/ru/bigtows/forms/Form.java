@@ -14,6 +14,10 @@ public class Form extends Application {
     public static Stage stage = null;
     public static String fileForm = "fxml/Login.fxml";
 
+    public static void init(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource(this.fileForm));
@@ -21,9 +25,5 @@ public class Form extends Application {
         stage.setScene(scene);
         stage.show();
         this.stage = stage;
-    }
-
-    public static void init(String[] args) {
-        launch(args);
     }
 }

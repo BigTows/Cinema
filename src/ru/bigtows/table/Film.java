@@ -181,12 +181,24 @@ public class Film {
         return name.get();
     }
 
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
     public String getId() {
         return id.get();
     }
 
+    public void setId(String id) {
+        this.id.set(id);
+    }
+
     public String getDuration() {
         return duration.get();
+    }
+
+    public void setDuration(String duration) {
+        this.duration.set(duration);
     }
 
     public String getIdC() {
@@ -197,25 +209,12 @@ public class Film {
         return nameC.get();
     }
 
-
     public void setNameC(String name) {
         this.nameC.set(name);
     }
 
-    public void setDuration(String duration) {
-        this.duration.set(duration);
-    }
-
     public void setCountry(String country) {
         this.idC.set(country);
-    }
-
-    public void setId(String id) {
-        this.id.set(id);
-    }
-
-    public void setName(String name) {
-        this.name.set(name);
     }
 
 }

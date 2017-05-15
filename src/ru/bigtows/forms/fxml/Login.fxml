@@ -5,8 +5,9 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="144.0"
-            prefWidth="529.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity"
+            prefHeight="144.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/8.0.111"
             fx:controller="ru.bigtows.forms.controllers.LoginController">
     <bottom>
         <HBox alignment="CENTER_LEFT" prefHeight="62.0" prefWidth="580.0" spacing="20.0" BorderPane.alignment="CENTER">
