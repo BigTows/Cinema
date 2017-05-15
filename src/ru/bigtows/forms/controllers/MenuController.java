@@ -34,13 +34,13 @@ public class MenuController {
     @FXML
     private ListView listtables;
     @FXML
-    private TableView table;
+    public TableView table;
 
     @FXML
     private MenuItem deleteSubMenu;
 
     @FXML
-    private HBox hb;
+    public HBox hb;
 
     @FXML
     private MenuItem adminSubMenu;
@@ -77,6 +77,9 @@ public class MenuController {
         fillTable(listtables.getFocusModel().getFocusedItem().toString(), table, hb);
     }
 
+    public void refreshTable(TableView table, HBox hb) {
+        fillTable(EditingTable.lastTable, table, hb);
+    }
 
     public static void fillTable(String nameTable, TableView table, HBox hb) {
         table.getColumns().clear();
@@ -188,6 +191,10 @@ public class MenuController {
             fillTable(EditingTable.selectedTable.toLowerCase(), table, hb);
             EditingTable.selectedTable = null;
         }
+    }
+
+    public MenuController() {
+
     }
 
 }

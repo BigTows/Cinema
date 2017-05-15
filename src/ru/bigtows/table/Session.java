@@ -28,9 +28,10 @@ public class Session {
     private final SimpleStringProperty date;
     private final SimpleStringProperty nameFilm;
     private final SimpleStringProperty nameCinema;
+    private final SimpleStringProperty nameTypeSession;
 
 
-    public Session(String id, String idR, String idF, String idC, String idT, String date, String nameFilm, String nameCinema) {
+    public Session(String id, String idR, String idF, String idC, String idT, String date, String nameFilm, String nameCinema, String nameTypeSession) {
         this.id = new SimpleStringProperty(id);
         this.idR = new SimpleStringProperty(idR);
         this.idF = new SimpleStringProperty(idF);
@@ -39,6 +40,7 @@ public class Session {
         this.date = new SimpleStringProperty(date);
         this.idC = new SimpleStringProperty(idC);
         this.nameCinema = new SimpleStringProperty(nameCinema);
+        this.nameTypeSession = new SimpleStringProperty(nameTypeSession);
     }
 
     public static void fillSession(TableView table, HBox hb) throws SQLException {
@@ -46,7 +48,7 @@ public class Session {
         TableColumn id = Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"));
         TableColumn idR = Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"));
         TableColumn nameF = Columns.getColumn("Название фильма", new PropertyValueFactory<Session, String>("nameFilm"));
-        TableColumn idT = Columns.getColumn("Номер типа", new PropertyValueFactory<Session, String>("idT"));
+        TableColumn nameTypeSession = Columns.getColumn("Номер типа", new PropertyValueFactory<Session, String>("nameTypeSession"));
         TableColumn nameCinema = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Session, String>("nameCinema"));
         TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Session, String>("date"));
         id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
@@ -79,7 +81,7 @@ public class Session {
             }
         });
 
-        idT.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+        nameTypeSession.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Session, String> t) {
                 t.getTableView().getItems().get(
@@ -109,7 +111,7 @@ public class Session {
         });
 
         date.setMinWidth(170);
-        table.getColumns().addAll(id, nameCinema, nameF, idR, idT, date);
+        table.getColumns().addAll(id, nameCinema, nameF, idR, nameTypeSession, date);
         table.setItems(dbConnector.getSessionTable());
 
         final TextField idRField = new TextField();
@@ -179,6 +181,88 @@ public class Session {
         table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("session"));
     }
 
+
+    public static void refresh(TableView table) throws SQLException {
+        DataBase dbConnector = Main.db;
+        TableColumn id = Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"));
+        TableColumn idR = Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"));
+        TableColumn nameF = Columns.getColumn("Название фильма", new PropertyValueFactory<Session, String>("nameFilm"));
+        TableColumn nameTypeSession = Columns.getColumn("Номер типа", new PropertyValueFactory<Session, String>("nameTypeSession"));
+        TableColumn nameCinema = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Session, String>("nameCinema"));
+        TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Session, String>("date"));
+        id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Session, String> t) {
+                String oldId = t.getOldValue();
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setId(t.getNewValue());
+                dbConnector.updateSession(t.getRowValue(), oldId);
+            }
+        });
+        idR.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Session, String> t) {
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setIdR(t.getNewValue());
+                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
+            }
+        });
+
+        nameF.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Session, String> t) {
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setIdF(t.getNewValue());
+                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
+            }
+        });
+
+        nameTypeSession.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Session, String> t) {
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setIdT(t.getNewValue());
+                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
+            }
+        });
+
+        nameCinema.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Session, String> t) {
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setIdC(t.getNewValue());
+                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
+            }
+        });
+        date.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Session, String> t) {
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setDate(t.getNewValue());
+                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
+            }
+        });
+
+        date.setMinWidth(170);
+        table.getColumns().addAll(id, nameCinema, nameF, idR, nameTypeSession, date);
+        table.setItems(dbConnector.getSessionTable());
+
+        Debug.log("[Session class]: Remove listener " + EditingTable.lastTable);
+        if (EditingTable.getListener(EditingTable.lastTable) != null) {
+            table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));
+        }
+
+
+        table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("session"));
+    }
+
+
     public String getIdR() {
         return idR.get();
     }
@@ -207,6 +291,10 @@ public class Session {
         return id.get();
     }
 
+    public String getNameTypeSession() {
+        return nameTypeSession.get();
+    }
+
     public String getNameFilm() {
         return this.nameFilm.get();
     }
@@ -218,6 +306,11 @@ public class Session {
     public void setNameCinema(String name) {
         this.nameCinema.set(name);
     }
+
+    public void setNameTypeSession(String name) {
+        this.nameTypeSession.set(name);
+    }
+
     public void setId(String id) {
         this.id.set(id);
     }

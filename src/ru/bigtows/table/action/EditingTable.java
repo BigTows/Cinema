@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ru.bigtows.Main;
 import ru.bigtows.table.*;
@@ -106,9 +107,11 @@ public class EditingTable extends TableCell<Country, String> {
              * @TOD
              *
              */
+            Optional<String> result = null;
+            HashMap<String, String> countriesHash = new HashMap<>();
             if (selectedTable.equalsIgnoreCase("film") && getTableView().getColumns().indexOf(getTableColumn()) == 2) {
                 List<String> choices = new ArrayList<>();
-                HashMap<String, String> countriesHash = new HashMap<>();
+
                 try {
                     ObservableList<Country> countries = Main.db.getCountryTable();
                     countries.forEach(data -> {
@@ -122,16 +125,9 @@ public class EditingTable extends TableCell<Country, String> {
                 dialog.setTitle("Выбор страны");
                 dialog.setHeaderText("Пожалуйста выберите интересующую вами страну");
                 dialog.setContentText("Вырерите страну:");
-                Optional<String> result = dialog.showAndWait();
-                if (result.isPresent()) {
-                    Debug.log(result.get());
-                    commitEdit(countriesHash.get(result.get()));
-                } else {
-                    cancelEdit();
-                }
+                result = dialog.showAndWait();
             } else if (selectedTable.equalsIgnoreCase("Session")) {
                 List<String> choices = new ArrayList<>();
-                HashMap<String, String> countriesHash = new HashMap<>();
                 if (getTableView().getColumns().indexOf(getTableColumn()) == 2) {
                     try {
                         ObservableList<Film> films = Main.db.getFilmTable();
@@ -146,13 +142,8 @@ public class EditingTable extends TableCell<Country, String> {
                     dialog.setTitle("Выбор Фильма");
                     dialog.setHeaderText("Пожалуйста выберите интересующую вам фильм");
                     dialog.setContentText("Вырерите фильм:");
-                    Optional<String> result = dialog.showAndWait();
-                    if (result.isPresent()) {
-                        Debug.log(result.get());
-                        commitEdit(countriesHash.get(result.get()));
-                    } else {
-                        cancelEdit();
-                    }
+                    result = dialog.showAndWait();
+
                 } else if (getTableView().getColumns().indexOf(getTableColumn()) == 1) {
                     ObservableList<Cinema> films = Main.db.getCinemaTable();
                     films.forEach(data -> {
@@ -163,13 +154,29 @@ public class EditingTable extends TableCell<Country, String> {
                     dialog.setTitle("Выбор Кинотеатра");
                     dialog.setHeaderText("Пожалуйста выберите интересующую вас кинотеатр");
                     dialog.setContentText("Вырерите кинотеатр:");
-                    Optional<String> result = dialog.showAndWait();
-                    if (result.isPresent()) {
-                        Debug.log(result.get());
-                        commitEdit(countriesHash.get(result.get()));
-                    } else {
-                        cancelEdit();
-                    }
+                    result = dialog.showAndWait();
+                } else if (getTableView().getColumns().indexOf(getTableColumn()) == 4) {
+                    ObservableList<TypeSession> sessions = Main.db.getTypeSessionTable();
+                    sessions.forEach(data -> {
+                        countriesHash.put(data.getName(), data.getId());
+                        choices.add(data.getName());
+                    });
+                    ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+                    dialog.setTitle("Выбор типа сесси");
+                    dialog.setHeaderText("Пожалуйста выберите интересующую вас тип сесси");
+                    dialog.setContentText("Вырерите тип сессии:");
+                    result = dialog.showAndWait();
+
+                }
+            }
+            if (result != null) {
+                if (result.isPresent()) {
+                    Debug.log(result.get());
+                    commitEdit(countriesHash.get(result.get()));
+                    refreshTable(getTableView());
+
+                } else {
+                    cancelEdit();
                 }
             }
         }
@@ -201,6 +208,30 @@ public class EditingTable extends TableCell<Country, String> {
                 setText(getString());
                 setGraphic(null);
             }
+        }
+    }
+
+    private void refreshTable(TableView tableView) {
+        tableView.getColumns().clear();
+        switch (EditingTable.lastTable.toLowerCase()) {
+            case "session": {
+                try {
+                    Session.refresh(tableView);
+                } catch (SQLException e) {
+
+                }
+                return;
+            }
+            case "film": {
+                try {
+                    Film.refresh(tableView);
+                } catch (SQLException e) {
+
+                }
+                return;
+            }
+            default:
+                Debug.log("[EditingTable]: Undefined table refresh");
         }
     }
 

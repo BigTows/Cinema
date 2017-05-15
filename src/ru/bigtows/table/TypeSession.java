@@ -33,7 +33,6 @@ public class TypeSession {
 
     /**
      * Fill Table view from table in DataBase Type_Session
-     *
      * @param table
      * @param hBox
      * @throws SQLException

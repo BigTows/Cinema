@@ -35,15 +35,19 @@ public class Film {
         this.nameC = new SimpleStringProperty(name_country);
     }
 
-    public static void fillFilm(TableView table, HBox hb) throws SQLException {
+    /**
+     * Fill Table view from table in DataBase Film
+     *
+     * @param table
+     * @param hBox
+     * @throws SQLException
+     */
+    public static void fillFilm(TableView table, HBox hBox) throws SQLException {
         DataBase dbConnector = Main.db;
         TableColumn id = Columns.getColumn("Номер фильма", new PropertyValueFactory<Film, String>("id"));
         TableColumn name = Columns.getColumn("Название", new PropertyValueFactory<Film, String>("name"));
         TableColumn duration = Columns.getColumn("Длительность", new PropertyValueFactory<Film, String>("duration"));
         TableColumn nameC = Columns.getColumn("Название страны", new PropertyValueFactory<Film, String>("nameC"));
-        /**
-         * add Event edit
-         */
         id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Film, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Film, String> t) {
@@ -92,9 +96,7 @@ public class Film {
         table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("film"));
 
         table.setItems(dbConnector.getFilmTable());
-        /**
-         * Add Buttons for input
-         */
+
         final TextField nameField = new TextField();
         nameField.setPromptText("Название");
         final TextField durationField = new TextField();
@@ -112,11 +114,67 @@ public class Film {
             @Override
             public void handle(ActionEvent e) {
                 dbConnector.addFilm(nameField.getText(), durationField.getText(), countrysMap.get(countryComboBox.getSelectionModel().getSelectedItem().toString()));
-                MenuController.fillTable("film", table, hb);
+                MenuController.fillTable("film", table, hBox);
             }
         });
-        hb.getChildren().addAll(nameField, durationField, countryComboBox, addButton);
+        hBox.getChildren().addAll(nameField, durationField, countryComboBox, addButton);
 
+    }
+
+    public static void refresh(TableView table) throws SQLException {
+        DataBase dbConnector = Main.db;
+        TableColumn id = Columns.getColumn("Номер фильма", new PropertyValueFactory<Film, String>("id"));
+        TableColumn name = Columns.getColumn("Название", new PropertyValueFactory<Film, String>("name"));
+        TableColumn duration = Columns.getColumn("Длительность", new PropertyValueFactory<Film, String>("duration"));
+        TableColumn nameC = Columns.getColumn("Название страны", new PropertyValueFactory<Film, String>("nameC"));
+        id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Film, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Film, String> t) {
+                String oldId = t.getOldValue();
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setId(t.getNewValue());
+                dbConnector.updateFilm(t.getRowValue(), oldId);
+            }
+        });
+        name.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Film, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Film, String> t) {
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setName(t.getNewValue());
+                dbConnector.updateFilm(t.getRowValue(), t.getRowValue().getId());
+            }
+        });
+
+        duration.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Film, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Film, String> t) {
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setDuration(t.getNewValue());
+                dbConnector.updateFilm(t.getRowValue(), t.getRowValue().getId());
+            }
+        });
+
+        nameC.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Film, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Film, String> t) {
+                t.getTableView().getItems().get(
+                        t.getTablePosition().getRow()
+                ).setCountry(t.getNewValue());
+                dbConnector.updateFilm(t.getRowValue(), t.getRowValue().getId());
+            }
+        });
+
+        table.getColumns().addAll(name, duration, nameC);
+        Debug.log("[Film class]: Remove listener " + EditingTable.lastTable);
+        if (EditingTable.getListener(EditingTable.lastTable) != null) {
+            table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));
+        }
+        table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("film"));
+
+        table.setItems(dbConnector.getFilmTable());
     }
 
     public String getName() {
@@ -159,4 +217,5 @@ public class Film {
     public void setName(String name) {
         this.name.set(name);
     }
+
 }

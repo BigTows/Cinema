@@ -96,6 +96,7 @@ public class Cinema {
         hb.getChildren().addAll(nameField, addressField, addButton);
     }
 
+
     public String getNameCinema() {
         return nameCinema.get();
     }

@@ -143,6 +143,16 @@ public class DataBase {
                         e.printStackTrace();
                     }
                 });
+                ObservableList<TypeSession> typeSessionsTable = getTypeSessionTable();
+                typeSessionsTable.forEach(dataTypeSession -> {
+                    try {
+                        if (dataTypeSession.getId().equalsIgnoreCase(dataTable.getString(5))) {
+                            nameTable[2] = dataTypeSession.getName();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
                 Session session = new Session(dataTable.getString(1),
                         dataTable.getString(2),
                         dataTable.getString(3),
@@ -150,7 +160,8 @@ public class DataBase {
                         dataTable.getString(5),
                         dataTable.getString(6),
                         nameTable[0],
-                        nameTable[1]);
+                        nameTable[1],
+                        nameTable[2]);
                 data.add(session);
             }
         }
