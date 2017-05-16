@@ -1,5 +1,6 @@
 package ru.bigtows.table;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,7 +18,10 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- * Created by bigtows on 30/03/2017.
+ * Cinema
+ * Created by bigtows
+ * GitHub - https://github.com/BigTows
+ * from 30/03/2017
  */
 public class Session {
     private final SimpleStringProperty id;
@@ -43,15 +47,15 @@ public class Session {
         this.nameTypeSession = new SimpleStringProperty(nameTypeSession);
     }
 
-    public static void fillSession(TableView table, HBox hb) throws SQLException {
+    public static void fillSession(TableView table, HBox hb, boolean... addInput) throws SQLException {
         DataBase dbConnector = Main.db;
-        TableColumn id = Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"));
-        TableColumn idR = Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"));
-        TableColumn nameF = Columns.getColumn("Название фильма", new PropertyValueFactory<Session, String>("nameFilm"));
+        TableColumn idSession = Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"));
+        TableColumn idRoom = Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"));
+        TableColumn nameFilm = Columns.getColumn("Название фильма", new PropertyValueFactory<Session, String>("nameFilm"));
         TableColumn nameTypeSession = Columns.getColumn("Название типа", new PropertyValueFactory<Session, String>("nameTypeSession"));
         TableColumn nameCinema = Columns.getColumn("Название кинотеатра", new PropertyValueFactory<Session, String>("nameCinema"));
         TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Session, String>("date"));
-        id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+        idSession.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Session, String> t) {
                 String oldId = t.getOldValue();
@@ -61,7 +65,7 @@ public class Session {
                 dbConnector.updateSession(t.getRowValue(), oldId);
             }
         });
-        idR.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+        idRoom.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Session, String> t) {
                 t.getTableView().getItems().get(
@@ -71,7 +75,7 @@ public class Session {
             }
         });
 
-        nameF.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
+        nameFilm.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Session, String> t) {
                 t.getTableView().getItems().get(
@@ -111,16 +115,27 @@ public class Session {
         });
 
         date.setMinWidth(170);
-        table.getColumns().addAll(id, nameCinema, nameF, idR, nameTypeSession, date);
+        table.getColumns().addAll(idSession, nameCinema, nameFilm, idRoom, nameTypeSession, date);
         table.setItems(dbConnector.getSessionTable());
+        ReadOnlyObjectProperty tableObject = table.getSelectionModel().selectedItemProperty();
+        Debug.log("[Session class]: Remove listener " + EditingTable.lastTable);
+        if (EditingTable.getListener(EditingTable.lastTable) != null) {
+            tableObject.removeListener(EditingTable.getListener(EditingTable.lastTable));
+        }
+        tableObject.addListener(EditingTable.getListener("session"));
 
+        if (addInput.length == 0 || !addInput[0]) addInput(table, hb);
+    }
+
+    private static void addInput(TableView tableView, HBox hBox) throws SQLException {
+        DataBase dbConnector = Main.db;
         final TextField idRField = new TextField();
         idRField.setPromptText("Номер комнаты");
 
         /**
          * Clean this
          */
-        ComboBox filmComboBox = new ComboBox();
+        ComboBox<String> filmComboBox = new ComboBox<String>();
         filmComboBox.setPromptText("Фильм");
         HashMap<String, String> filmMap = new HashMap<>();
         Main.db.getFilmTable().forEach((tab) -> {
@@ -128,7 +143,7 @@ public class Session {
             filmComboBox.getItems().addAll(tab.getName());
         });
 
-        ComboBox typeSessionComboBox = new ComboBox();
+        ComboBox<String> typeSessionComboBox = new ComboBox<>();
         typeSessionComboBox.setPromptText("Вид сеанса");
         HashMap<String, String> typeSessionMap = new HashMap<>();
         Main.db.getTypeSessionTable().forEach((tab) -> {
@@ -137,7 +152,7 @@ public class Session {
         });
 
 
-        ComboBox cinemaComboBox = new ComboBox();
+        ComboBox<String> cinemaComboBox = new ComboBox<>();
         cinemaComboBox.setPromptText("Кинотеатры");
         HashMap<String, String> cinemaMap = new HashMap<>();
         Main.db.getCinemaTable().forEach((tab) -> {
@@ -147,17 +162,20 @@ public class Session {
 
         DatePicker datePicker = new DatePicker();
 
-        ComboBox hourComboBox = new ComboBox();
+        ComboBox<String> hourComboBox = new ComboBox<>();
         hourComboBox.setPromptText("Часы");
-        ComboBox minuteComboBox = new ComboBox();
+        ComboBox<String> minuteComboBox = new ComboBox<>();
         minuteComboBox.setPromptText("Минуты");
-        for (int i = 1; i <= 59; i++) {
-            if (i <= 23) hourComboBox.getItems().addAll(i);
-            minuteComboBox.getItems().addAll(i);
+        for (int i = 0; i <= 59; i++) {
+            String element = i + "";
+            if (i < 10) element = "0" + element;
+            if (i <= 23) hourComboBox.getItems().addAll(element);
+            minuteComboBox.getItems().addAll(element);
         }
 
 
         final Button addButton = new Button("Отправить");
+
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -166,100 +184,16 @@ public class Session {
                         typeSessionMap.get(typeSessionComboBox.getSelectionModel().getSelectedItem().toString()),
                         cinemaMap.get(cinemaComboBox.getSelectionModel().getSelectedItem().toString()),
                         ((datePicker.getValue().toString() + " " + hourComboBox.getSelectionModel().getSelectedItem().toString() + ":" + minuteComboBox.getSelectionModel().getSelectedItem().toString() + ":00")));
-                MenuController.fillTable("session", table, hb);
+                MenuController.fillTable("session", tableView, hBox);
             }
         });
-        hb.getChildren().addAll(idRField, filmComboBox, typeSessionComboBox, cinemaComboBox, datePicker,
+        hBox.getChildren().addAll(idRField, filmComboBox, typeSessionComboBox, cinemaComboBox, datePicker,
                 hourComboBox, minuteComboBox, addButton);
-
-        Debug.log("[Session class]: Remove listener " + EditingTable.lastTable);
-        if (EditingTable.getListener(EditingTable.lastTable) != null) {
-            table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));
-        }
-
-
-        table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("session"));
     }
 
 
     public static void refresh(TableView table) throws SQLException {
-        DataBase dbConnector = Main.db;
-        TableColumn id = Columns.getColumn("Номер сеанса", new PropertyValueFactory<Session, String>("id"));
-        TableColumn idR = Columns.getColumn("Номер зала", new PropertyValueFactory<Session, String>("idR"));
-        TableColumn nameF = Columns.getColumn("Название фильма", new PropertyValueFactory<Session, String>("nameFilm"));
-        TableColumn nameTypeSession = Columns.getColumn("Номер типа", new PropertyValueFactory<Session, String>("nameTypeSession"));
-        TableColumn nameCinema = Columns.getColumn("Номер кинотеатра", new PropertyValueFactory<Session, String>("nameCinema"));
-        TableColumn date = Columns.getColumn("Дата", new PropertyValueFactory<Session, String>("date"));
-        id.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<Session, String> t) {
-                String oldId = t.getOldValue();
-                t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()
-                ).setId(t.getNewValue());
-                dbConnector.updateSession(t.getRowValue(), oldId);
-            }
-        });
-        idR.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<Session, String> t) {
-                t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()
-                ).setIdR(t.getNewValue());
-                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
-            }
-        });
-
-        nameF.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<Session, String> t) {
-                t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()
-                ).setIdF(t.getNewValue());
-                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
-            }
-        });
-
-        nameTypeSession.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<Session, String> t) {
-                t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()
-                ).setIdT(t.getNewValue());
-                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
-            }
-        });
-
-        nameCinema.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<Session, String> t) {
-                t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()
-                ).setIdC(t.getNewValue());
-                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
-            }
-        });
-        date.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Session, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<Session, String> t) {
-                t.getTableView().getItems().get(
-                        t.getTablePosition().getRow()
-                ).setDate(t.getNewValue());
-                dbConnector.updateSession(t.getRowValue(), t.getRowValue().getId());
-            }
-        });
-
-        date.setMinWidth(170);
-        table.getColumns().addAll(id, nameCinema, nameF, idR, nameTypeSession, date);
-        table.setItems(dbConnector.getSessionTable());
-
-        Debug.log("[Session class]: Remove listener " + EditingTable.lastTable);
-        if (EditingTable.getListener(EditingTable.lastTable) != null) {
-            table.getSelectionModel().selectedItemProperty().removeListener(EditingTable.getListener(EditingTable.lastTable));
-        }
-
-
-        table.getSelectionModel().selectedItemProperty().addListener(EditingTable.getListener("session"));
+        fillSession(table, null, true);
     }
 
 

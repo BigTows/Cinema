@@ -60,7 +60,6 @@ public class MenuController {
                 break;
             }
             case "film": {
-
                 try {
                     fillFilm(table, hb);
                     EditingTable.lastTable = nameTable;
