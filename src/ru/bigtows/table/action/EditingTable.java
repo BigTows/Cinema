@@ -108,15 +108,12 @@ public class EditingTable extends TableCell<Country, String> {
             HashMap<String, String> countriesHash = new HashMap<>();
             if (selectedTable.equalsIgnoreCase("film") && getTableView().getColumns().indexOf(getTableColumn()) == 2) {
                 List<String> choices = new ArrayList<>();
-                try {
-                    ObservableList<Country> countries = Main.db.getCountryTable();
+
+                ObservableList<Country> countries = Main.db.getCountryTable();
                     countries.forEach(data -> {
                         countriesHash.put(data.getName(), data.getId());
                         choices.add(data.getName());
                     });
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
                 ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
                 dialog.setTitle("Выбор страны");
                 dialog.setHeaderText("Пожалуйста выберите интересующую вами страну");
@@ -125,15 +122,13 @@ public class EditingTable extends TableCell<Country, String> {
             } else if (selectedTable.equalsIgnoreCase("Session")) {
                 List<String> choices = new ArrayList<>();
                 if (getTableView().getColumns().indexOf(getTableColumn()) == 2) {
-                    try {
-                        ObservableList<Film> films = Main.db.getFilmTable();
+
+                    ObservableList<Film> films = Main.db.getFilmTable();
                         films.forEach(data -> {
                             countriesHash.put(data.getName(), data.getId());
                             choices.add(data.getName());
                         });
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+
                     ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
                     dialog.setTitle("Выбор Фильма");
                     dialog.setHeaderText("Пожалуйста выберите интересующую вам фильм");

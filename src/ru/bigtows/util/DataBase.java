@@ -58,15 +58,19 @@ public class DataBase {
     }
 
 
-    public ObservableList<Country> getCountryTable() throws SQLException {
+    public ObservableList<Country> getCountryTable() {
         ObservableList<Country> data = FXCollections.observableArrayList();
         if (this.status) {
-            ResultSet dataTable = this.connect.createStatement().executeQuery("call getCountry");
-
-            while (dataTable.next()) {
-                Country country = new Country(dataTable.getString(2),
-                        dataTable.getString(1));
-                data.add(country);
+            ResultSet dataTable = null;
+            try {
+                dataTable = this.connect.createStatement().executeQuery("call getCountry");
+                while (dataTable.next()) {
+                    Country country = new Country(dataTable.getString(2),
+                            dataTable.getString(1));
+                    data.add(country);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return data;
@@ -89,80 +93,89 @@ public class DataBase {
         return data;
     }
 
-    public ObservableList<Film> getFilmTable() throws SQLException {
+    public ObservableList<Film> getFilmTable() {
         ObservableList<Film> data = FXCollections.observableArrayList();
         if (this.status) {
             ResultSet dataTable;
-            dataTable = this.connect.createStatement().executeQuery("call getFilm");
-            while (dataTable.next()) {
+            try {
+                dataTable = this.connect.createStatement().executeQuery("call getFilm");
+                while (dataTable.next()) {
 
-                ObservableList<Country> countries = getCountryTable();
-                countries.forEach(countryData -> {
-                    try {
-                        if (countryData.getId().equalsIgnoreCase(dataTable.getString(4))) {
-                            Film film = new Film(dataTable.getString(1),
-                                    dataTable.getString(2),
-                                    dataTable.getString(3),
-                                    dataTable.getString(4),
-                                    countryData.getName());
-                            data.add(film);
+                    ObservableList<Country> countries = getCountryTable();
+                    countries.forEach(countryData -> {
+                        try {
+                            if (countryData.getId().equalsIgnoreCase(dataTable.getString(4))) {
+                                Film film = new Film(dataTable.getString(1),
+                                        dataTable.getString(2),
+                                        dataTable.getString(3),
+                                        dataTable.getString(4),
+                                        countryData.getName());
+                                data.add(film);
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
                         }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
+                    });
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return data;
     }
 
-    public ObservableList<Session> getSessionTable() throws SQLException {
+    public ObservableList<Session> getSessionTable() {
         ObservableList<Session> data = FXCollections.observableArrayList();
         if (this.status) {
             ResultSet dataTable;
-            dataTable = this.connect.createStatement().executeQuery("call getSession");
-            while (dataTable.next()) {
-                ObservableList<Film> filmsTable = getFilmTable();
-                final String[] nameTable = {"", "", "", ""}; // Here Like Inner Join
-                filmsTable.forEach(dataFilms -> {
-                    try {
-                        if (dataFilms.getId().equalsIgnoreCase(dataTable.getString(3))) {
-                            nameTable[0] = dataFilms.getName();
+            try {
+                dataTable = this.connect.createStatement().executeQuery("call getSession");
+
+                while (dataTable.next()) {
+                    ObservableList<Film> filmsTable = getFilmTable();
+                    final String[] nameTable = {"", "", "", ""}; // Here Like Inner Join
+                    filmsTable.forEach(dataFilms -> {
+                        try {
+                            if (dataFilms.getId().equalsIgnoreCase(dataTable.getString(3))) {
+                                nameTable[0] = dataFilms.getName();
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
                         }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
-                ObservableList<Cinema> cinemasTable = getCinemaTable();
-                cinemasTable.forEach(dataCinema -> {
-                    try {
-                        if (dataCinema.getIdCinema().equalsIgnoreCase(dataTable.getString(4))) {
-                            nameTable[1] = dataCinema.getNameCinema();
+                    });
+                    ObservableList<Cinema> cinemasTable = getCinemaTable();
+                    cinemasTable.forEach(dataCinema -> {
+                        try {
+                            if (dataCinema.getIdCinema().equalsIgnoreCase(dataTable.getString(4))) {
+                                nameTable[1] = dataCinema.getNameCinema();
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
                         }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
-                ObservableList<TypeSession> typeSessionsTable = getTypeSessionTable();
-                typeSessionsTable.forEach(dataTypeSession -> {
-                    try {
-                        if (dataTypeSession.getId().equalsIgnoreCase(dataTable.getString(5))) {
-                            nameTable[2] = dataTypeSession.getName();
+                    });
+                    ObservableList<TypeSession> typeSessionsTable = getTypeSessionTable();
+                    typeSessionsTable.forEach(dataTypeSession -> {
+                        try {
+                            if (dataTypeSession.getId().equalsIgnoreCase(dataTable.getString(5))) {
+                                nameTable[2] = dataTypeSession.getName();
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
                         }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
-                Session session = new Session(dataTable.getString(1),
-                        dataTable.getString(2),
-                        dataTable.getString(3),
-                        dataTable.getString(4),
-                        dataTable.getString(5),
-                        dataTable.getString(6),
-                        nameTable[0],
-                        nameTable[1],
-                        nameTable[2]);
-                data.add(session);
+                    });
+                    Session session = new Session(dataTable.getString(1),
+                            dataTable.getString(2),
+                            dataTable.getString(3),
+                            dataTable.getString(4),
+                            dataTable.getString(5),
+                            dataTable.getString(6),
+                            nameTable[0],
+                            nameTable[1],
+                            nameTable[2]);
+                    data.add(session);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return data;

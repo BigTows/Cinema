@@ -1,5 +1,6 @@
 package ru.bigtows.forms.controllers;
 
+import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -9,14 +10,23 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import ru.bigtows.Main;
-import ru.bigtows.forms.Form;
-import ru.bigtows.table.Log;
+import ru.bigtows.table.*;
 import ru.bigtows.util.Debug;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+
+import static ru.bigtows.forms.Form.stage;
 
 /**
  * Created by bigtows on 10/04/2017.
@@ -95,7 +105,7 @@ public class AdminController {
 
     public void onExitFromAdminPanel(ActionEvent actionEvent) {
         try {
-            Form.stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Menu.fxml")), 650, 400));
+            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../fxml/Menu.fxml")), 650, 400));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,6 +140,102 @@ public class AdminController {
     }
 
     public void onCreateBackup(ActionEvent actionEvent) {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory =
+                directoryChooser.showDialog(new Stage());
+        if (selectedDirectory != null) {
+            XMLOutputFactory f = XMLOutputFactory.newInstance();
+            try {
+                XMLStreamWriter writer = null;
+                try {
+                    writer = f.createXMLStreamWriter(new FileWriter(selectedDirectory.getAbsolutePath() + "/backupCinemaDataBase.xml"));
+                } catch (IOException e) {
+                    Debug.log(e.getMessage());
+                }
+                if (writer == null) {
+                    return;
+                }
+                writer = new IndentingXMLStreamWriter(writer);
+                HashMap<String, String> data = new HashMap<>();
+                writer.writeStartDocument();
+                writer.writeStartElement("TABLES");
+                startTable(writer, "country");
+                for (Country country : Main.db.getCountryTable()) {
+                    data.put("NAME", country.getName());
+                    printRecord(writer, country.getId(), data);
+                }
+                writer.writeEndElement();
+                startTable(writer, "film");
+                for (Film film : Main.db.getFilmTable()) {
+                    data.put("NAME", film.getName());
+                    data.put("DURATION", film.getDuration());
+                    data.put("COUNTRY", film.getIdC());
+                    printRecord(writer, film.getId(), data);
+                }
+                writer.writeEndElement();
+                startTable(writer, "cinema");
+                for (Cinema cinema : Main.db.getCinemaTable()) {
+                    data.put("NAME", cinema.getNameCinema());
+                    data.put("ADDRESS", cinema.getAddressCinema());
+                    printRecord(writer, cinema.getIdCinema(), data);
+                }
+                writer.writeEndElement();
+                startTable(writer, "typeSession");
+                for (TypeSession typeSession : Main.db.getTypeSessionTable()) {
+                    data.put("NAME", typeSession.getName());
+                    printRecord(writer, typeSession.getId(), data);
+                }
+                writer.writeEndElement();
+                startTable(writer, "session");
+                for (Session session : Main.db.getSessionTable()) {
+                    data.put("CINEMA", session.getIdC());
+                    data.put("DATE", session.getDate());
+                    data.put("ROOM", session.getIdR());
+                    data.put("TYPESESSION", session.getIdT());
+                    data.put("FILM", session.getIdF());
+                    printRecord(writer, session.getId(), data);
+                }
+                writer.writeEndElement();
+                writer.writeEndDocument();
+                writer.close();
+            } catch (XMLStreamException e) {
+                Debug.log(e.getMessage());
+            }
+        }
+    }
+
+    private void startTable(XMLStreamWriter writer, String nameTable) {
+        try {
+            writer.writeStartElement("TABLE");
+            writer.writeAttribute("name", nameTable);
+        } catch (XMLStreamException e) {
+            Debug.log(e.getMessage());
+        }
+
+    }
+
+    private void printRecord(XMLStreamWriter writer, String id, HashMap<String, String> dataMap) {
+        try {
+            writer.writeStartElement("RECORD");
+            writer.writeAttribute("id", id);
+            writeData(writer, dataMap);
+            writer.writeEndElement();
+        } catch (XMLStreamException e) {
+            Debug.log(e.getMessage());
+        }
+    }
+
+    private void writeData(XMLStreamWriter writer, HashMap<String, String> dataMap) {
+        dataMap.forEach((key, item) -> {
+            try {
+                writer.writeStartElement(key);
+                writer.writeCharacters(item);
+                writer.writeEndElement();
+            } catch (XMLStreamException e) {
+                Debug.log(e.getMessage());
+            }
+        });
+        dataMap.clear();
 
     }
 
