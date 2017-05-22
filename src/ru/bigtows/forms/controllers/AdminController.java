@@ -74,7 +74,7 @@ public class AdminController {
         StringBuilder grantsText = new StringBuilder("Группа: ");
         try {
             while (grants.next()) {
-                grantsText.append(grants.getString(1) + ", ");
+                grantsText.append(grants.getString(1)).append(", ");
             }
         } catch (SQLException e) {
             e.printStackTrace();

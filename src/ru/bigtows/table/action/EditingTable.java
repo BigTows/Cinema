@@ -110,10 +110,10 @@ public class EditingTable extends TableCell<Country, String> {
                 List<String> choices = new ArrayList<>();
 
                 ObservableList<Country> countries = Main.db.getCountryTable();
-                    countries.forEach(data -> {
-                        countriesHash.put(data.getName(), data.getId());
-                        choices.add(data.getName());
-                    });
+                countries.forEach(data -> {
+                    countriesHash.put(data.getName(), data.getId());
+                    choices.add(data.getName());
+                });
                 ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
                 dialog.setTitle("Выбор страны");
                 dialog.setHeaderText("Пожалуйста выберите интересующую вами страну");
@@ -124,10 +124,10 @@ public class EditingTable extends TableCell<Country, String> {
                 if (getTableView().getColumns().indexOf(getTableColumn()) == 2) {
 
                     ObservableList<Film> films = Main.db.getFilmTable();
-                        films.forEach(data -> {
-                            countriesHash.put(data.getName(), data.getId());
-                            choices.add(data.getName());
-                        });
+                    films.forEach(data -> {
+                        countriesHash.put(data.getName(), data.getId());
+                        choices.add(data.getName());
+                    });
 
                     ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
                     dialog.setTitle("Выбор Фильма");
